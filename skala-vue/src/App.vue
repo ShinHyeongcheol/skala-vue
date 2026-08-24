@@ -1,6 +1,7 @@
 <script setup>
 import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
 import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
+import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vue'
 </script>
 
 <template>
@@ -32,6 +33,13 @@ import DirectiveText from './components/practices/codeChallenge/DirectiveText.vu
             <h3>Directive Text</h3>
           </div>
           <DirectiveText />
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <p>Directive example</p>
+            <h3>Directive Bind</h3>
+          </div>
+          <DirectiveBind />
         </article>
       </div>
     </section>
@@ -101,7 +109,7 @@ h2 {
 
 .practice-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -132,6 +140,10 @@ h2 {
   .practice-hub {
     gap: 2rem;
     padding: 2rem 1rem;
+  }
+
+  .practice-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
