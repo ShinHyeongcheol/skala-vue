@@ -1,5 +1,6 @@
 <script setup>
 import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
+import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
 </script>
 
 <template>
@@ -24,6 +25,13 @@ import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
             <h3>Sample One</h3>
           </div>
           <SampleOne />
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <p>Directive example</p>
+            <h3>Directive Text</h3>
+          </div>
+          <DirectiveText />
         </article>
       </div>
     </section>
