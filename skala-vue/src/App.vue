@@ -10,6 +10,4 @@ import SampleOne from './components/practices/basic/SampleOne.vue'
     </section>
 
   </header>
-
-  <RouterView />
 </template>
