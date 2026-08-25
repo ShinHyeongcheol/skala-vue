@@ -10,6 +10,7 @@ import EventHandler from '../components/practices/codeChallenge/evnetHandling/Ev
 import EventObject from '../components/practices/codeChallenge/evnetHandling/EventObject.vue'
 import EventModifier from '../components/practices/codeChallenge/evnetHandling/EventModifiers.vue'
 import ModelBasic from '../components/practices/codeChallenge/form/ModelBasic.vue'
+import FormElements from '../components/practices/codeChallenge/form/FormElements.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -20,7 +21,8 @@ const practices = [
   { id: 'eventHandler', category: 'Event Handling example', title: 'Event Handler', component: EventHandler },
   { id: 'eventObject', category: 'Event Handling example', title: 'Event Object', component: EventObject },
   { id: 'eventModifiers', category: 'Event Handling example', title: 'Event Modifiers', component: EventModifier },
-  { id: 'modelBasic', category: 'Form example', title: 'Model Basic', component: ModelBasic }
+  { id: 'modelBasic', category: 'Form example', title: 'Model Basic', component: ModelBasic },
+  { id: 'formElements', category: 'Form example', title: 'Form Elements', component: FormElements }
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
