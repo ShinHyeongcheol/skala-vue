@@ -1,10 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
-import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
-import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vue'
-import DirectiveCondition from './components/practices/codeChallenge/DirectiveCondition.vue'
-import DirectiveList from './components/practices/codeChallenge/DirectiveList.vue'
+
+import SampleOne from './components/practices/codeChallenge/reactivity/SampleOne.vue'
+import DirectiveText from './components/practices/codeChallenge/vueDirective/DirectiveText.vue'
+import DirectiveBind from './components/practices/codeChallenge/vueDirective/DirectiveBind.vue'
+import DirectiveCondition from './components/practices/codeChallenge/vueDirective/DirectiveCondition.vue'
+import DirectiveList from './components/practices/codeChallenge/vueDirective/DirectiveList.vue'
 
 const openCards = ref({
   sampleOne: true,
