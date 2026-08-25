@@ -9,6 +9,7 @@ import DirectiveCondition from './components/practices/codeChallenge/vueDirectiv
 import DirectiveList from './components/practices/codeChallenge/vueDirective/DirectiveList.vue'
 
 import EventHandler from './components/practices/codeChallenge/evnetHandling/EventHandler.vue'
+import EventObject from './components/practices/codeChallenge/evnetHandling/EventObject.vue'
 
 const openCards = ref({
   sampleOne: true,
@@ -106,6 +107,18 @@ const openCards = ref({
             </button>
           </div>
           <div v-show="openCards.eventHandler"><EventHandler /></div>
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <div>
+              <p>Event Handling example</p>
+              <h3>Event Object</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.eventObject" @click="openCards.eventObject = !openCards.eventObject">
+              {{ openCards.eventObject ? '접기' : '열기' }}
+            </button>
+          </div>
+          <div v-show="openCards.eventObject"><EventObject /></div>
         </article>
       </div>
     </section>

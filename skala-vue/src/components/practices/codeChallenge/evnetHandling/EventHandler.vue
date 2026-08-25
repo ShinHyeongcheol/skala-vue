@@ -9,8 +9,8 @@ const sayHello = () => {
 </script>
 
 <template>
-    <h3 class="label">1. 이벤트 핸들링</h3>
     <div class="card">
+        <h3 class="label">1. 이벤트 핸들링</h3>
         <div class="box">
             <p class="label">카운트: {{ cnt }}</p>
             <button class="btn btn-primary" @click="cnt++">카운트 증가</button>
