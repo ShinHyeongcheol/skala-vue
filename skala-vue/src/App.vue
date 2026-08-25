@@ -3,6 +3,7 @@ import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
 import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
 import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vue'
 import DirectiveCondition from './components/practices/codeChallenge/DirectiveCondition.vue'
+import DirectiveList from './components/practices/codeChallenge/DirectiveList.vue'
 </script>
 
 <template>
@@ -42,12 +43,19 @@ import DirectiveCondition from './components/practices/codeChallenge/DirectiveCo
           </div>
           <DirectiveBind />
         </article>
-        <article class="practice-card">
+        <article class="practice-card"> 
           <div class="card-heading">
             <p>Directive example</p>
             <h3>Directive Condition</h3>
           </div>
           <DirectiveCondition />
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <p>Directive example</p>
+            <h3>Directive List</h3>
+          </div>
+          <DirectiveList />
         </article>
       </div>
     </section>
