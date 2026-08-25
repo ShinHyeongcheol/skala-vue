@@ -21,6 +21,8 @@ src/
 │   ├── CodeChallengeView.vue       # Code Challenge 목록 화면
 │   └── HandsOnView.vue             # Hands-On 목록 화면
 └── components/
+    ├── handsOn/
+    │   └── WeatherMockup.vue       # 날씨 Mockup Hands-On 과제
     └── practices/
         └── codeChallenge/          # 기능별 실습 컴포넌트
             ├── reactivity/
