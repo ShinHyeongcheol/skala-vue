@@ -2,10 +2,13 @@
 import { ref } from 'vue'
 
 import SampleOne from './components/practices/codeChallenge/reactivity/SampleOne.vue'
+
 import DirectiveText from './components/practices/codeChallenge/vueDirective/DirectiveText.vue'
 import DirectiveBind from './components/practices/codeChallenge/vueDirective/DirectiveBind.vue'
 import DirectiveCondition from './components/practices/codeChallenge/vueDirective/DirectiveCondition.vue'
 import DirectiveList from './components/practices/codeChallenge/vueDirective/DirectiveList.vue'
+
+import EventHandler from './components/practices/codeChallenge/evnetHandling/EventHandler.vue'
 
 const openCards = ref({
   sampleOne: true,
@@ -91,6 +94,18 @@ const openCards = ref({
             </button>
           </div>
           <div v-show="openCards.directiveList"><DirectiveList /></div>
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <div>
+              <p>Event Handling example</p>
+              <h3>Event Handler</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.eventHandler" @click="openCards.eventHandler = !openCards.eventHandler">
+              {{ openCards.eventHandler ? '접기' : '열기' }}
+            </button>
+          </div>
+          <div v-show="openCards.eventHandler"><EventHandler /></div>
         </article>
       </div>
     </section>
