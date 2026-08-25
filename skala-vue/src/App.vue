@@ -1,9 +1,18 @@
 <script setup>
+import { ref } from 'vue'
 import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
 import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
 import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vue'
 import DirectiveCondition from './components/practices/codeChallenge/DirectiveCondition.vue'
 import DirectiveList from './components/practices/codeChallenge/DirectiveList.vue'
+
+const openCards = ref({
+  sampleOne: true,
+  directiveText: true,
+  directiveBind: true,
+  directiveCondition: true,
+  directiveList: true,
+})
 </script>
 
 <template>
@@ -24,38 +33,63 @@ import DirectiveList from './components/practices/codeChallenge/DirectiveList.vu
         <!-- 새 Code Challenge는 이 article을 복사해 컴포넌트만 바꿔 추가하세요. -->
         <article class="practice-card">
           <div class="card-heading">
-            <p>Responsive example</p>
-            <h3>Sample One</h3>
+            <div>
+              <p>Responsive example</p>
+              <h3>Sample One</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.sampleOne" @click="openCards.sampleOne = !openCards.sampleOne">
+              {{ openCards.sampleOne ? '접기' : '열기' }}
+            </button>
           </div>
-          <SampleOne />
+          <div v-show="openCards.sampleOne"><SampleOne /></div>
         </article>
         <article class="practice-card">
           <div class="card-heading">
-            <p>Directive example</p>
-            <h3>Directive Text</h3>
+            <div>
+              <p>Directive example</p>
+              <h3>Directive Text</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.directiveText" @click="openCards.directiveText = !openCards.directiveText">
+              {{ openCards.directiveText ? '접기' : '열기' }}
+            </button>
           </div>
-          <DirectiveText />
+          <div v-show="openCards.directiveText"><DirectiveText /></div>
         </article>
         <article class="practice-card">
           <div class="card-heading">
-            <p>Directive example</p>
-            <h3>Directive Bind</h3>
+            <div>
+              <p>Directive example</p>
+              <h3>Directive Bind</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.directiveBind" @click="openCards.directiveBind = !openCards.directiveBind">
+              {{ openCards.directiveBind ? '접기' : '열기' }}
+            </button>
           </div>
-          <DirectiveBind />
+          <div v-show="openCards.directiveBind"><DirectiveBind /></div>
         </article>
         <article class="practice-card"> 
           <div class="card-heading">
-            <p>Directive example</p>
-            <h3>Directive Condition</h3>
+            <div>
+              <p>Directive example</p>
+              <h3>Directive Condition</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.directiveCondition" @click="openCards.directiveCondition = !openCards.directiveCondition">
+              {{ openCards.directiveCondition ? '접기' : '열기' }}
+            </button>
           </div>
-          <DirectiveCondition />
+          <div v-show="openCards.directiveCondition"><DirectiveCondition /></div>
         </article>
         <article class="practice-card">
           <div class="card-heading">
-            <p>Directive example</p>
-            <h3>Directive List</h3>
+            <div>
+              <p>Directive example</p>
+              <h3>Directive List</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.directiveList" @click="openCards.directiveList = !openCards.directiveList">
+              {{ openCards.directiveList ? '접기' : '열기' }}
+            </button>
           </div>
-          <DirectiveList />
+          <div v-show="openCards.directiveList"><DirectiveList /></div>
         </article>
       </div>
     </section>
@@ -144,8 +178,32 @@ h2 {
 }
 
 .card-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-heading > div {
   display: grid;
   gap: 0.25rem;
+}
+
+.card-toggle {
+  flex: 0 0 auto;
+  padding: 0.375rem 0.625rem;
+  color: #2563eb;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: transparent;
+  border: 1px solid #93c5fd;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.card-toggle:hover {
+  background: #eff6ff;
 }
 
 .empty-card {
