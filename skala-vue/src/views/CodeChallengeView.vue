@@ -13,6 +13,7 @@ import ModelBasic from '../components/practices/codeChallenge/form/ModelBasic.vu
 import FormElements from '../components/practices/codeChallenge/form/FormElements.vue'
 import ModelModifiers from '../components/practices/codeChallenge/form/ModelModifiers.vue'
 import ScopedStyle from '../components/practices/codeChallenge/form/ScopedStyle.vue'
+import refExample from '../components/practices/codeChallenge/composition/refExample.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -26,7 +27,8 @@ const practices = [
   { id: 'modelBasic', category: 'Form example', title: 'Model Basic', component: ModelBasic },
   { id: 'formElements', category: 'Form example', title: 'Form Elements', component: FormElements },
   { id: 'modelModifiers', category: 'Form example', title: 'Model Modifiers', component: ModelModifiers },
-  { id: 'scopedStyle', category: 'Form example', title: 'Scoped Style', component: ScopedStyle }
+  { id: 'scopedStyle', category: 'Form example', title: 'Scoped Style', component: ScopedStyle },
+  { id: 'refExample', category: 'Composition API example', title: 'Ref Example', component: refExample },
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
