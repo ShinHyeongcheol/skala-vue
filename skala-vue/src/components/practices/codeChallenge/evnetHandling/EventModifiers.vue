@@ -1,7 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-
-const handleClick = () => {
+const handleLink = () => {
   alert(`수식어(@click.prevent) 덕분에 함수만 실행됩니다.`)
 }
 const handleBox = () => {
