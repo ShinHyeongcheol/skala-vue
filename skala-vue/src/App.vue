@@ -2,6 +2,7 @@
 import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
 import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
 import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vue'
+import DirectiveCondition from './components/practices/codeChallenge/DirectiveCondition.vue'
 </script>
 
 <template>
@@ -40,6 +41,13 @@ import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vu
             <h3>Directive Bind</h3>
           </div>
           <DirectiveBind />
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <p>Directive example</p>
+            <h3>Directive Condition</h3>
+          </div>
+          <DirectiveCondition />
         </article>
       </div>
     </section>
@@ -111,6 +119,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  align-items: start;
 }
 
 .practice-card,
