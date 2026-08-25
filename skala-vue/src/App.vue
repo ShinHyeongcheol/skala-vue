@@ -1,17 +1,26 @@
 <script setup>
 import { ref } from 'vue'
-import SampleOne from './components/practices/codeChallenge/SampleOne.vue'
-import DirectiveText from './components/practices/codeChallenge/DirectiveText.vue'
-import DirectiveBind from './components/practices/codeChallenge/DirectiveBind.vue'
-import DirectiveCondition from './components/practices/codeChallenge/DirectiveCondition.vue'
-import DirectiveList from './components/practices/codeChallenge/DirectiveList.vue'
+
+import SampleOne from './components/practices/codeChallenge/reactivity/SampleOne.vue'
+
+import DirectiveText from './components/practices/codeChallenge/vueDirective/DirectiveText.vue'
+import DirectiveBind from './components/practices/codeChallenge/vueDirective/DirectiveBind.vue'
+import DirectiveCondition from './components/practices/codeChallenge/vueDirective/DirectiveCondition.vue'
+import DirectiveList from './components/practices/codeChallenge/vueDirective/DirectiveList.vue'
+
+import EventHandler from './components/practices/codeChallenge/evnetHandling/EventHandler.vue'
+import EventObject from './components/practices/codeChallenge/evnetHandling/EventObject.vue'
+import EventModifier from './components/practices/codeChallenge/evnetHandling/EventModifiers.vue'
 
 const openCards = ref({
-  sampleOne: true,
-  directiveText: true,
-  directiveBind: true,
-  directiveCondition: true,
-  directiveList: true,
+  sampleOne: false,
+  directiveText: false,
+  directiveBind: false,
+  directiveCondition: false,
+  directiveList: false,
+  eventHandler: false,
+  eventObject: false,
+  eventModifiers: false,
 })
 </script>
 
@@ -90,6 +99,42 @@ const openCards = ref({
             </button>
           </div>
           <div v-show="openCards.directiveList"><DirectiveList /></div>
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <div>
+              <p>Event Handling example</p>
+              <h3>Event Handler</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.eventHandler" @click="openCards.eventHandler = !openCards.eventHandler">
+              {{ openCards.eventHandler ? '접기' : '열기' }}
+            </button>
+          </div>
+          <div v-show="openCards.eventHandler"><EventHandler /></div>
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <div>
+              <p>Event Handling example</p>
+              <h3>Event Object</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.eventObject" @click="openCards.eventObject = !openCards.eventObject">
+              {{ openCards.eventObject ? '접기' : '열기' }}
+            </button>
+          </div>
+          <div v-show="openCards.eventObject"><EventObject /></div>
+        </article>
+        <article class="practice-card">
+          <div class="card-heading">
+            <div>
+              <p>Event Handling example</p>
+              <h3>Event Modifiers</h3>
+            </div>
+            <button class="card-toggle" type="button" :aria-expanded="openCards.eventModifiers" @click="openCards.eventModifiers = !openCards.eventModifiers">
+              {{ openCards.eventModifiers ? '접기' : '열기' }}
+            </button>
+          </div>
+          <div v-show="openCards.eventModifiers"><EventModifier /></div>
         </article>
       </div>
     </section>
