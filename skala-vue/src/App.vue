@@ -13,11 +13,14 @@ import EventObject from './components/practices/codeChallenge/evnetHandling/Even
 import EventModifier from './components/practices/codeChallenge/evnetHandling/EventModifiers.vue'
 
 const openCards = ref({
-  sampleOne: true,
-  directiveText: true,
-  directiveBind: true,
-  directiveCondition: true,
-  directiveList: true,
+  sampleOne: false,
+  directiveText: false,
+  directiveBind: false,
+  directiveCondition: false,
+  directiveList: false,
+  eventHandler: false,
+  eventObject: false,
+  eventModifiers: false,
 })
 </script>
 
