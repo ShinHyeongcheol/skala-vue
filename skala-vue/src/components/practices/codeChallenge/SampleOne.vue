@@ -27,6 +27,11 @@ button {
   background-color: #3b82f6;
   color: white;
 }
+
+button + button {
+  margin-left: 8px;
+}
+
 button:hover {
   background-color: #2563eb;
 }
