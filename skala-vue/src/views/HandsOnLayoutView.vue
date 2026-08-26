@@ -9,6 +9,7 @@
 
       <nav class="weather-nav" aria-label="날씨 실습 메뉴">
         <RouterLink to="/hands-on">날씨 대시보드</RouterLink>
+        <RouterLink to="/hands-on/hourly">시간대별 날씨</RouterLink>
         <RouterLink to="/hands-on/about">날씨 소개</RouterLink>
       </nav>
     </header>

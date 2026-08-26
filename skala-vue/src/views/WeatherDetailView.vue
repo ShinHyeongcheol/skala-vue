@@ -36,6 +36,7 @@ onMounted(() => {
           </article>
         </div>
       </section>
+
     </template>
 
     <section v-else class="not-found-city" aria-labelledby="not-found-city-title">

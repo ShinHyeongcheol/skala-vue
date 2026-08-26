@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const WeatherHomeView = () => import('@/views/WeatherHomeView.vue')
 const WeatherDetailView = () => import('@/views/WeatherDetailView.vue')
 const WeatherAboutView = () => import('@/views/WeatherAboutView.vue')
+const WeatherHourlyView = () => import('@/views/WeatherHourlyView.vue')
 const HandsOnLayoutView = () => import('@/views/HandsOnLayoutView.vue')
 const CodeChallengeView = () => import('@/views/CodeChallengeView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
@@ -16,6 +17,7 @@ const router = createRouter({
       component: HandsOnLayoutView,
       children: [
         { path: '', name: 'weather-home', component: WeatherHomeView },
+        { path: 'hourly', name: 'weather-hourly', component: WeatherHourlyView },
         { path: 'about', name: 'weather-about', component: WeatherAboutView },
       ],
     },
