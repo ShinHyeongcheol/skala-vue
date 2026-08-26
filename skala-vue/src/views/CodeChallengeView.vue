@@ -22,6 +22,7 @@ import componentLifcycleExample from '../components/practices/codeChallenge/comp
 import prosEmitExample from '../components/practices/codeChallenge/propsAndEmit/PropsEmitParent.vue'
 import slotDefaultExample from '../components/practices/codeChallenge/componentSlot/DefaultSlotParent.vue'
 import slotNamedExample from '../components/practices/codeChallenge/componentSlot/NamedSlotParent.vue'
+import slotScopedExample from '../components/practices/codeChallenge/componentSlot/ScopedSlotParent.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -44,7 +45,9 @@ const practices = [
   { id: 'componentLifecycle', category: 'Lifecycle example', title: 'Component Lifecycle', component: componentLifcycleExample },
   { id: 'propsEmit', category: 'Props & Emits example', title: 'Props & Emits', component: prosEmitExample },
   { id: 'slotDefault', category: 'Component Slot example', title: 'Default Slot', component: slotDefaultExample },
-  { id: 'slotNamed', category: 'Component Slot example', title: 'Named Slot', component: slotNamedExample },]
+  { id: 'slotNamed', category: 'Component Slot example', title: 'Named Slot', component: slotNamedExample },
+  { id: 'slotScoped', category: 'Component Slot example', title: 'Scoped Slot', component: slotScopedExample },
+]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
 </script>
