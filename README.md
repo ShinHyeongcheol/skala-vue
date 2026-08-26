@@ -51,6 +51,14 @@ src/
 
 ## Hands-On
 
+### 0. Project Scaffolding
+
+- Node.js와 npm 개발 환경을 확인하고 Vue 3 + Vite 기반의 `skala-vue` 프로젝트를 생성했습니다.
+- `npm install`로 의존성을 설치하고 `npm run dev`로 개발 서버를 실행해 로컬 화면 동작을 확인했습니다.
+- `src/main.js`에서 Vue 앱이 생성되고, `App.vue`, Router, View 컴포넌트로 화면이 연결되는 기본 구조를 확인했습니다.
+- 화면의 텍스트를 수정한 뒤 저장만으로 브라우저에 즉시 반영되는 HMR(Hot Module Replacement) 동작을 확인했습니다.
+- vue devTool을 사용해보면서 유용하다고 생각했던 기능으로는 그래프를 통해 각 뷰나 컴포넌트가 어떻게 연결이 되어있는지 확인해보고 움직여볼 수 있는 기능이었고, Components를 통해 트리 형태의 코드 구조나 실제 렌더리잉 된 코드를 확인해볼 수 있던 기능이 구조 파악에 도움이 되어 vue를 처음 학습할 때 도움이 되었습니다.
+
 ### 1. Weather Mockup
 
 날씨 데이터를 활용해 Vue의 데이터 렌더링, 조건부 UI, 입력 처리, 이벤트를 하나의 화면에 조합했습니다.
