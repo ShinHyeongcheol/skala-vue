@@ -15,6 +15,9 @@ import ModelModifiers from '../components/practices/codeChallenge/form/ModelModi
 import ScopedStyle from '../components/practices/codeChallenge/form/ScopedStyle.vue'
 import refExample from '../components/practices/codeChallenge/composition/refExample.vue'
 import reactiveExample from '../components/practices/codeChallenge/composition/reactiveExample.vue'
+import computedExample from '../components/practices/codeChallenge/computedWatchers/ComputedExample.vue'
+import watchExample from '../components/practices/codeChallenge/computedWatchers/watchExample.vue'
+import watchEffectExample from '../components/practices/codeChallenge/computedWatchers/watchEffectExample.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -31,6 +34,9 @@ const practices = [
   { id: 'scopedStyle', category: 'Form example', title: 'Scoped Style', component: ScopedStyle },
   { id: 'refExample', category: 'Composition API example', title: 'Ref Example', component: refExample },
   { id: 'reactiveExample', category: 'Composition API example', title: 'Reactive Example', component: reactiveExample },
+  { id: 'computedExample', category: 'Computed & Watchers example', title: 'Computed Example', component: computedExample },
+  { id: 'watchExample', category: 'Computed & Watchers example', title: 'Watch Example', component: watchExample },
+  { id: 'watchEffectExample', category: 'Computed & Watchers example', title: 'Watch Effect Example', component: watchEffectExample },
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
