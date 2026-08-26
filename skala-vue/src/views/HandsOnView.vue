@@ -1,12 +1,12 @@
 <script setup>
-import WeatherMockup from '@/components/handsOn/WeatherMockup.vue'
+import WeatherHandsOn from '@/components/handsOn/WeatherHandsOn.vue'
 
 const practices = [
   {
-    id: 'weatherMockup',
+    id: 'weatherHandsOn',
     category: 'Hands-On Assignment',
-    title: 'Weather Mockup',
-    component: WeatherMockup,
+    title: 'Weather Hands-On',
+    component: WeatherHandsOn,
   },
 ]
 
