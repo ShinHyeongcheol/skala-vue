@@ -1,5 +1,8 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
+import BaseCard from './weatherComponent/BaseCard.vue'
+import SearchBar from './weatherComponent/SearchBar.vue'
+import WeatherCard from './weatherComponent/WeatherCard.vue'
 
 const weatherList = ref([
   {
@@ -143,14 +146,11 @@ const toggleForecast = (cityId) => {
   <section class="weather" aria-labelledby="weather-title">
     <h2 id="weather-title">🌤️ 과제 2: 날씨 (컴포지션)</h2>
 
-    <section class="panel" aria-labelledby="search-title">
-      <h3 id="search-title">🔍 도시 검색</h3>
-      <input
-        v-model.trim="searchQuery"
-        type="text"
-        placeholder="검색할 도시 이름 입력"
+    <BaseCard title="🔍 도시 검색">
+      <SearchBar
+        :search-query="searchQuery"
+        @update-query="searchQuery = $event"
       />
-      <p>검색 중인 도시: <strong>{{ searchQuery  }}</strong></p>
 
       <hr class="filter-divider" />
 
@@ -179,70 +179,27 @@ const toggleForecast = (cityId) => {
         </button>
       </div>
       <p>현재 <strong>{{ visibleCityCount }}</strong>개 도시를 표시 중입니다.</p>
-    </section>
+    </BaseCard>
 
-    <section class="panel" aria-labelledby="weather-list-title">
-      <h3 id="weather-list-title">🏙️ 지역별 날씨 현황</h3>
+    <BaseCard title="🏙️ 지역별 날씨 현황">
 
       <template v-if="filteredWeatherList.length > 0">
-        <article
+        <WeatherCard
           v-for="city in filteredWeatherList"
           :key="city.id"
-          class="weather-card"
-          role="button"
-          tabindex="0"
-          @click="selectCity(city)"
-          @keydown.enter="selectCity(city)"
-          @keydown.space.prevent="selectCity(city)"
-        >
-          <div class="weather-content">
-            <h4>{{ city.name }}</h4>
-            <p>현재 날씨: {{ city.displayStatus }}</p>
-            <p>현재 기온: {{ city.displayTemp }}°C</p>
-
-            <span v-if="city.displayTemp >= 25" class="temperature-label hot">
-              🔥 더움 (25도 이상)
-            </span>
-            <span v-else class="temperature-label cool">
-              ❄️ 선선함 (25도 미만)
-            </span>
-            <span v-if="city.displayStatus === '비'" class="weather-label rain">
-              ☔ 비 오는 중
-            </span>
-
-          </div>
-
-          <div class="card-actions">
-            <button type="button" @click.stop="showDetail(city.name, city.displayStatus)">
-              상세보기
-            </button>
-            <button
-              type="button"
-              class="forecast-toggle"
-              @click.stop="toggleForecast(city.id)"
-            >
-              {{ openForecastCityId === city.id ? '시간대별 예보 닫기' : '시간대별 예보 보기' }}
-            </button>
-          </div>
-
-          <div v-show="openForecastCityId === city.id" class="forecast-list">
-          <p
-            v-for="forecast in city.forecast"
-            :key="forecast.time"
-            :class="{ selected: forecast.time === selectedTime }"
-          >
-              <strong>{{ forecast.time }}</strong>
-              <span>{{ forecast.temp }}°C</span>
-              <span>{{ forecast.status }}</span>
-            </p>
-          </div>
-        </article>
+          :city="city"
+          :selected-time="selectedTime"
+          :is-forecast-open="openForecastCityId === city.id"
+          @select-card="selectCity"
+          @click-detail="showDetail"
+          @toggle-forecast="toggleForecast"
+        />
       </template>
 
       <p v-else class="empty-result">
         "{{ searchQuery }}"와 일치하는 도시가 없습니다.
       </p>
-    </section>
+    </BaseCard>
 
     <p class="status-bar" aria-live="polite">
       {{ selectedCityInfo ? `${selectedCityInfo.name}이 선택되었습니다.` : '카드를 클릭하거나 검색해 보세요.' }}
@@ -261,19 +218,6 @@ h2 {
   padding-bottom: 0.75rem;
   font-size: 1.25rem;
   border-bottom: 1px solid #e2e8f0;
-}
-
-.panel {
-  display: grid;
-  gap: 0.625rem;
-  padding: 1rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-}
-
-h3, h4 {
-  font-weight: 700;
 }
 
 label {
@@ -307,15 +251,6 @@ label {
   border-color: #2563eb;
 }
 
-h3 {
-  font-size: 1rem;
-}
-
-h4 {
-  font-size: 0.9375rem;
-}
-
-input,
 select {
   width: 100%;
   padding: 0.5rem 0.625rem;
@@ -326,106 +261,9 @@ select {
   border-radius: 0.25rem;
 }
 
-.panel > p,
-.weather-card p {
+.weather > p,
+.time-filter + p {
   font-size: 0.875rem;
-}
-
-.weather-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  cursor: pointer;
-  background: #fff;
-  border: 1px solid #dbe2ea;
-  border-radius: 0.5rem;
-}
-
-.weather-card:hover,
-.weather-card:focus-visible {
-  border-color: #2563eb;
-  outline: 2px solid #bfdbfe;
-  outline-offset: 1px;
-}
-
-.weather-content {
-  display: grid;
-  gap: 0.375rem;
-}
-
-
-.temperature-label {
-  justify-self: start;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  border-radius: 0.25rem;
-}
-
-.hot {
-  color: #9a3412;
-  background: #fed7aa;
-}
-
-.cool {
-  color: #1e40af;
-  background: #bfdbfe;
-}
-
-.weather-labels {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.weather-label {
-  justify-self: start;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  border-radius: 0.25rem;
-}
-
-.rain {
-  color: #1e40af;
-  background: #dbeafe;
-}
-
-.card-actions {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.forecast-list {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.75rem;
-  padding: 0.625rem;
-  background: #f8fafc;
-  border-left: 3px solid #93c5fd;
-  border-radius: 0.25rem;
-}
-
-.forecast-list p {
-  display: grid;
-  gap: 0.125rem;
-  min-width: 0;
-  padding: 0.625rem;
-  color: #475569;
-  font-size: 0.8125rem;
-  background: #fff;
-  border: 1px solid #dbe2ea;
-  border-radius: 0.25rem;
-}
-
-.forecast-list p.selected {
-  color: #1e3a8a;
-  background: #dbeafe;
-  border-color: #60a5fa;
-  box-shadow: inset 0 0 0 1px #60a5fa;
 }
 
 button {
@@ -464,15 +302,6 @@ button:hover {
 }
 
 @media (max-width: 480px) {
-  .weather-card {
-    align-items: stretch;
-    grid-template-columns: 1fr;
-  }
-
-  .card-actions {
-    grid-template-columns: 1fr;
-  }
-
   button {
     width: 100%;
   }
