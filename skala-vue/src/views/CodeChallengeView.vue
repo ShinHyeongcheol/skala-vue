@@ -16,6 +16,7 @@ import ScopedStyle from '../components/practices/codeChallenge/form/ScopedStyle.
 import refExample from '../components/practices/codeChallenge/composition/refExample.vue'
 import reactiveExample from '../components/practices/codeChallenge/composition/reactiveExample.vue'
 import computedExample from '../components/practices/codeChallenge/computedWatchers/ComputedExample.vue'
+import watchExample from '../components/practices/codeChallenge/computedWatchers/watchExample.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -33,6 +34,7 @@ const practices = [
   { id: 'refExample', category: 'Composition API example', title: 'Ref Example', component: refExample },
   { id: 'reactiveExample', category: 'Composition API example', title: 'Reactive Example', component: reactiveExample },
   { id: 'computedExample', category: 'Computed & Watchers example', title: 'Computed Example', component: computedExample },
+  { id: 'watchExample', category: 'Computed & Watchers example', title: 'Watch Example', component: watchExample },
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
