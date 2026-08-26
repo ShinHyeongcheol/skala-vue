@@ -35,7 +35,10 @@ src/
             ├── computedWatchers/
             ├── vueDirective/
             ├── evnetHandling/
-            └── form/
+            ├── form/
+            ├── componentLifecycle/
+            ├── propsAndEmit/
+            └── componentSlot/
 ```
 
 ### 화면 구성
@@ -171,6 +174,26 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | `ComputedExample.vue` | `computed()`, Writable Computed | 의존하는 상태가 바뀔 때만 계산 결과를 갱신하는 캐싱 특성과 `get / set`을 가진 Writable Computed를 확인했습니다. |
 | `watchExample.vue` | `watch()`, 단일 상태·객체 속성 감시 | `ref` 값의 이전·현재 값을 비교하고, `reactive` 객체 전체 감시와 특정 속성 감시의 차이를 확인했습니다. |
 | `watchEffectExample.vue` | `watchEffect()` | 콜백 안에서 사용한 반응형 상태를 자동 추적하며, 화면 진입 시에도 즉시 실행되는 동작을 확인했습니다. |
+
+### 7. Component Lifecycle
+
+| 실습 | 사용한 기능 | 학습 내용 |
+| --- | --- | --- |
+| `componentLifcycleExample.vue` | `onMounted`, `onUpdated`, `onUnmounted` | 마운트 시 타이머를 자동 시작하고, 반응형 시간 값으로 화면이 갱신될 때마다 로그를 확인했습니다. 컴포넌트가 사라질 때는 `clearInterval()`을 호출해 타이머를 정리하는 흐름을 구현했습니다. |
+
+### 8. Props & Emits
+
+| 실습 | 사용한 기능 | 학습 내용 |
+| --- | --- | --- |
+| `PropsEmitParent.vue`, `PropsEmitChild.vue` | `defineProps`, `defineEmits`, `ref` | 부모가 사용자 이름·포인트·VIP 상태를 `ref`로 관리하고, 자식에 props로 전달했습니다. 자식은 포인트 충전과 초기화 요청을 emit으로 전달하며, 실제 상태 변경은 부모가 처리하는 단방향 데이터 흐름을 확인했습니다. |
+
+### 9. Component Slot
+
+| 실습 | 사용한 기능 | 학습 내용 |
+| --- | --- | --- |
+| `DefaultSlotParent.vue`, `DefaultSlotChild.vue` | 기본 슬롯, fallback 콘텐츠, `:slotted()` | 부모가 자식 컴포넌트의 기본 슬롯에 텍스트·제목·버튼 마크업을 주입하고, 내용이 없을 때는 자식의 기본 콘텐츠가 표시되는 동작을 확인했습니다. |
+| `NamedSlotParent.vue`, `NamedSlotChild.vue` | `v-slot:header`, 이름 있는 슬롯 | 카드의 헤더와 본문처럼 목적이 다른 영역을 이름으로 구분해 부모가 원하는 위치에 콘텐츠를 주입했습니다. |
+| `ScopedSlotParent.vue`, `ScopedSlotChild.vue` | 슬롯 props, `v-slot` | 자식의 `message`, `userCount` 데이터를 슬롯 props로 부모에 전달하고, 부모가 받은 데이터로 마크업을 구성했습니다. |
 
 
 ### 확인 방법
