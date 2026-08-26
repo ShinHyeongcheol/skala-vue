@@ -8,9 +8,11 @@ const weatherList = ref([
     temp: 28,
     status: '맑음',
     forecast: [
+      { time: '09:00', temp: 23, status: '맑음' },
       { time: '12:00', temp: 28, status: '맑음' },
       { time: '15:00', temp: 30, status: '구름' },
       { time: '18:00', temp: 26, status: '맑음' },
+      { time: '21:00', temp: 21, status: '맑음' },
     ],
   },
   {
@@ -19,9 +21,11 @@ const weatherList = ref([
     temp: 24,
     status: '비',
     forecast: [
+      { time: '09:00', temp: 22, status: '흐림' },
       { time: '12:00', temp: 24, status: '비' },
       { time: '15:00', temp: 23, status: '흐림' },
       { time: '18:00', temp: 21, status: '비' },
+      { time: '21:00', temp: 19, status: '비' },
     ],
   },
   {
@@ -30,9 +34,11 @@ const weatherList = ref([
     temp: 26,
     status: '구름',
     forecast: [
+      { time: '09:00', temp: 22, status: '구름' },
       { time: '12:00', temp: 26, status: '구름' },
       { time: '15:00', temp: 27, status: '맑음' },
       { time: '18:00', temp: 24, status: '구름' },
+      { time: '21:00', temp: 20, status: '맑음' },
     ],
   },
   {
@@ -41,9 +47,11 @@ const weatherList = ref([
     temp: 27,
     status: '맑음',
     forecast: [
+      { time: '09:00', temp: 22, status: '맑음' },
       { time: '12:00', temp: 27, status: '맑음' },
       { time: '15:00', temp: 29, status: '맑음' },
       { time: '18:00', temp: 25, status: '구름' },
+      { time: '21:00', temp: 20, status: '구름' },
     ],
   },
   {
@@ -52,9 +60,11 @@ const weatherList = ref([
     temp: 23,
     status: '비',
     forecast: [
+      { time: '09:00', temp: 21, status: '비' },
       { time: '12:00', temp: 23, status: '비' },
       { time: '15:00', temp: 22, status: '흐림' },
       { time: '18:00', temp: 20, status: '비' },
+      { time: '21:00', temp: 18, status: '흐림' },
     ],
   },
 ])
@@ -63,12 +73,33 @@ const searchQuery = ref('')
 const selectedCityInfo = ref(null)
 const openForecastCityId = ref(null)
 const selectedWeatherStatus = ref('전체')
+const selectedTime = ref('12:00')
+
+const timeOptions = [
+  { value: '09:00', label: '오전 9시' },
+  { value: '12:00', label: '오후 12시' },
+  { value: '15:00', label: '오후 3시' },
+  { value: '18:00', label: '오후 6시' },
+  { value: '21:00', label: '오후 9시' },
+]
+
+const weatherAtSelectedTime = computed(() => {
+  return weatherList.value.map((city) => {
+    const forecast = city.forecast.find((item) => item.time === selectedTime.value)
+
+    return {
+      ...city,
+      displayTemp: forecast?.temp ?? city.temp,
+      displayStatus: forecast?.status ?? city.status,
+    }
+  })
+})
 
 const filteredWeatherList = computed(() => {
-  return weatherList.value.filter((city) => {
+  return weatherAtSelectedTime.value.filter((city) => {
     const matchesSearch = !searchQuery.value || city.name.includes(searchQuery.value)
     const matchesStatus = selectedWeatherStatus.value === '전체'
-      || city.status === selectedWeatherStatus.value
+      || city.displayStatus === selectedWeatherStatus.value
 
     return matchesSearch && matchesStatus
   })
@@ -86,6 +117,10 @@ watch(selectedWeatherStatus, (status) => {
   console.log(`[watch] 날씨 필터: ${status}`)
 })
 
+watch(selectedTime, (time) => {
+  console.log(`[watch] 선택 시간: ${time}`)
+})
+
 watchEffect(() => {
   console.log(`[watchEffect] 검색어: ${searchQuery.value}`)
 })
@@ -95,7 +130,8 @@ const selectCity = (city) => {
 }
 
 const showDetail = (cityName, status) => {
-  window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
+  const selectedHour = Number(selectedTime.value.split(':')[0])
+  window.alert(`${cityName}의 ${selectedHour}시 날씨는 [${status}] 상태입니다.`)
 }
 
 const toggleForecast = (cityId) => {
@@ -104,8 +140,8 @@ const toggleForecast = (cityId) => {
 </script>
 
 <template>
-  <section class="weather-mockup" aria-labelledby="weather-mockup-title">
-    <h2 id="weather-mockup-title">🌤️ 과제 2: 날씨 (컴포지션)</h2>
+  <section class="weather" aria-labelledby="weather-title">
+    <h2 id="weather-title">🌤️ 과제 2: 날씨 (컴포지션)</h2>
 
     <section class="panel" aria-labelledby="search-title">
       <h3 id="search-title">🔍 도시 검색</h3>
@@ -125,6 +161,23 @@ const toggleForecast = (cityId) => {
         <option>비</option>
         <option>구름</option>
       </select>
+
+      <hr class="filter-divider" />
+
+      <span class="filter-label">🕘 시간 필터</span>
+      <div class="time-filter" role="group" aria-label="시간대 선택">
+        <button
+          v-for="time in timeOptions"
+          :key="time.value"
+          type="button"
+          class="time-button"
+          :class="{ active: selectedTime === time.value }"
+          :aria-pressed="selectedTime === time.value"
+          @click="selectedTime = time.value"
+        >
+          {{ time.label }}
+        </button>
+      </div>
       <p>현재 <strong>{{ visibleCityCount }}</strong>개 도시를 표시 중입니다.</p>
     </section>
 
@@ -144,23 +197,23 @@ const toggleForecast = (cityId) => {
         >
           <div class="weather-content">
             <h4>{{ city.name }}</h4>
-            <p>현재 날씨: {{ city.status }}</p>
-            <p>현재 기온: {{ city.temp }}°C</p>
+            <p>현재 날씨: {{ city.displayStatus }}</p>
+            <p>현재 기온: {{ city.displayTemp }}°C</p>
 
-            <span v-if="city.temp >= 25" class="temperature-label hot">
+            <span v-if="city.displayTemp >= 25" class="temperature-label hot">
               🔥 더움 (25도 이상)
             </span>
             <span v-else class="temperature-label cool">
               ❄️ 선선함 (25도 미만)
             </span>
-            <span v-if="city.status === '비'" class="weather-label rain">
+            <span v-if="city.displayStatus === '비'" class="weather-label rain">
               ☔ 비 오는 중
             </span>
 
           </div>
 
           <div class="card-actions">
-            <button type="button" @click.stop="showDetail(city.name, city.status)">
+            <button type="button" @click.stop="showDetail(city.name, city.displayStatus)">
               상세보기
             </button>
             <button
@@ -173,7 +226,11 @@ const toggleForecast = (cityId) => {
           </div>
 
           <div v-show="openForecastCityId === city.id" class="forecast-list">
-            <p v-for="forecast in city.forecast" :key="forecast.time">
+          <p
+            v-for="forecast in city.forecast"
+            :key="forecast.time"
+            :class="{ selected: forecast.time === selectedTime }"
+          >
               <strong>{{ forecast.time }}</strong>
               <span>{{ forecast.temp }}°C</span>
               <span>{{ forecast.status }}</span>
@@ -194,7 +251,7 @@ const toggleForecast = (cityId) => {
 </template>
 
 <style scoped>
-.weather-mockup {
+.weather {
   display: grid;
   gap: 1rem;
   color: #1e293b;
@@ -223,11 +280,31 @@ label {
   font-weight: 700;
 }
 
+.filter-label {
+  font-weight: 700;
+}
+
 .filter-divider {
   width: 100%;
   margin: 0.25rem 0;
   border: 0;
   border-top: 1px solid #dbe2ea;
+}
+
+.time-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.time-button {
+  min-width: 5.5rem;
+}
+
+.time-button.active {
+  color: #fff;
+  background: #2563eb;
+  border-color: #2563eb;
 }
 
 h3 {
@@ -324,7 +401,7 @@ select {
 .forecast-list {
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.75rem;
   padding: 0.625rem;
   background: #f8fafc;
@@ -342,6 +419,13 @@ select {
   background: #fff;
   border: 1px solid #dbe2ea;
   border-radius: 0.25rem;
+}
+
+.forecast-list p.selected {
+  color: #1e3a8a;
+  background: #dbeafe;
+  border-color: #60a5fa;
+  box-shadow: inset 0 0 0 1px #60a5fa;
 }
 
 button {
@@ -386,10 +470,6 @@ button:hover {
   }
 
   .card-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .forecast-list {
     grid-template-columns: 1fr;
   }
 
