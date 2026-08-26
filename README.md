@@ -9,6 +9,7 @@ npm install
 npm run dev
 ```
 
+
 ## 전체 프로젝트 구조
 
 ```text
@@ -40,6 +41,7 @@ src/
 - `CodeChallengeView.vue`는 실습 컴포넌트를 2열 카드 그리드로 표시합니다. 각 카드는 기본적으로 닫혀 있고, `열기/접기` 토글로 필요한 예제만 확인할 수 있습니다.
 - `HandsOnView.vue`는 과제 목록과 향후 구현할 Hands-On 결과물을 배치하는 화면입니다.
 
+
 ## Hands-On
 
 ### 1. Weather Mockup
@@ -62,7 +64,8 @@ v-show와 v-for에 대한 학습을 추가적으로 진행을 해보고자 시�
 
 - `v-show`: 선택한 도시의 예보 영역을 DOM에 유지한 채 열고 닫습니다.
 - 중첩 `v-for`: 각 도시의 `forecast` 배열을 반복해 시간, 기온, 날씨 상태를 가로 목록으로 표시합니다.
-- `.stop`: 예보 토글 버튼을 눌러도 부모 날씨 카드의 선택 이벤트가 함께 실행되지 않도록 제어했습니다.
+- `.stop`: 예보 토글 버튼을 눌러도 부모 날씨 카드의 선택 이벤트가 함께 실행되지 않도록했습니다.
+
 
 ### 2. Weather Composition
 
@@ -81,10 +84,9 @@ Weather Mockup에서 추가했던 시간대별 예보 데이터에 대한 기능
 오전 9시와 오후 9시를 추가해 시간대를 조금 더 세분화 했고, 도시 검색에 따른 필터링 기능처럼 날씨나 시간대별로 지역별 날씨 카드가 변하게 수정했습니다.
 상태가 변할 때 마다 콘솔로그에 나타나게 했고, 토글 목록에서도 내가 선택한 시간대를 좀 더 잘 확인할 수 있게 반영했습니다.
 
-- `computed(weatherAtSelectedTime)`: 각 도시의 `forecast` 배열에서 선택한 시각을 찾아 카드의 날씨·기온 표시값으로 변환합니다.
+- `computed(weatherAtSelectedTime)`: 각 도시의 `forecast` 배열에서 선택한 시각을 찾아 카드의 날씨/기온 표시값으로 변환합니다.
 - `watch(selectedTime)`: 시간 필터가 변경될 때 선택 시간을 콘솔에 기록합니다.
 
-시각의 날씨 정보를 기준으로 동작하도록 구성했습니다.
 
 ## Code Challenge
 
@@ -96,6 +98,7 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | --- | --- | --- |
 | `SampleOne.vue` | `ref()`, 템플릿 보간법, `@click` | 일반 변수는 값만 변경해도 화면이 다시 렌더링되지 않지만, `ref`로 만든 반응형 상태는 값이 변경되면 화면에도 반영됨을 확인했습니다. |
 
+
 ### 2. Vue Directive
 
 | 실습 | 사용한 기능 | 학습 내용 |
@@ -105,6 +108,7 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | `DirectiveCondition.vue` | `v-if`, `v-else-if`, `v-else`, `v-show` | 점수에 따른 등급 표시와 모달의 표시 여부를 제어하며 조건부 렌더링과 단순 표시 전환의 차이를 확인했습니다. |
 | `DirectiveList.vue` | `v-for`, `:key` | 배열과 객체 데이터를 반복 렌더링하고, 목록 항목에 고유한 키를 지정하는 방법을 학습했습니다. |
 
+
 ### 3. Event Handling
 
 | 실습 | 사용한 기능 | 학습 내용 |
@@ -112,6 +116,7 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | `EventHandler.vue` | `@click`, 메서드 핸들러 | 클릭으로 반응형 카운트를 증감하고, 이벤트에서 함수를 호출했습니다. |
 | `EventObject.vue` | `$event`, 이벤트 객체 전달 | 마우스 좌표와 이벤트가 발생한 HTML 태그를 확인하며 이벤트 객체의 정보를 사용했습니다. |
 | `EventModifiers.vue` | `@click.prevent`, `@click.stop` | 링크의 기본 이동을 막고, 자식 요소 클릭이 부모로 전파되는 버블링을 제어했습니다. |
+
 
 ### 4. Form 및 Style
 
@@ -122,12 +127,14 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | `ModelModifiers.vue` | `.lazy`, `.number`, `.trim` | 입력 반영 시점 변경, 숫자 변환, 앞뒤 공백 제거 등 `v-model` 수식어를 사용했습니다. |
 | `ScopedStyle.vue` | `<style scoped>` | 컴포넌트 내부에만 적용되는 스타일을 작성해 다른 컴포넌트와 CSS가 충돌하지 않도록 했습니다. |
 
+
 ### 5. Composition API - Reactive State
 
 | 실습 | 사용한 기능 | 학습 내용 |
 | --- | --- | --- |
 | `refExample.vue` | `ref()`, `.value`, `v-model` | 숫자, 문자열, 불리언, 배열, 객체를 `ref`로 선언하고 값 변경에 따른 화면 갱신을 확인했습니다. Script에서는 `.value`로 접근하고, 템플릿에서는 자동으로 언래핑되는 특징을 학습했습니다. |
 | `reactiveExample.vue` | `reactive()`, 객체·배열 메서드 | 객체와 배열을 반응형으로 만들고, 객체 속성 변경과 배열 항목 추가·삭제가 화면에 반영되는 흐름을 확인했습니다. |
+
 
 ### 6. Computed & Watchers
 
@@ -136,6 +143,7 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | `ComputedExample.vue` | `computed()`, Writable Computed | 의존하는 상태가 바뀔 때만 계산 결과를 갱신하는 캐싱 특성과 `get / set`을 가진 Writable Computed를 확인했습니다. |
 | `watchExample.vue` | `watch()`, 단일 상태·객체 속성 감시 | `ref` 값의 이전·현재 값을 비교하고, `reactive` 객체 전체 감시와 특정 속성 감시의 차이를 확인했습니다. |
 | `watchEffectExample.vue` | `watchEffect()` | 콜백 안에서 사용한 반응형 상태를 자동 추적하며, 화면 진입 시에도 즉시 실행되는 동작을 확인했습니다. |
+
 
 ### 확인 방법
 
