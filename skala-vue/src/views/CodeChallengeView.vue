@@ -18,6 +18,7 @@ import reactiveExample from '../components/practices/codeChallenge/composition/r
 import computedExample from '../components/practices/codeChallenge/computedWatchers/ComputedExample.vue'
 import watchExample from '../components/practices/codeChallenge/computedWatchers/watchExample.vue'
 import watchEffectExample from '../components/practices/codeChallenge/computedWatchers/watchEffectExample.vue'
+import componentLifcycleExample from '../components/practices/codeChallenge/componentLifecycle/componentLifcycleExample.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -37,6 +38,7 @@ const practices = [
   { id: 'computedExample', category: 'Computed & Watchers example', title: 'Computed Example', component: computedExample },
   { id: 'watchExample', category: 'Computed & Watchers example', title: 'Watch Example', component: watchExample },
   { id: 'watchEffectExample', category: 'Computed & Watchers example', title: 'Watch Effect Example', component: watchEffectExample },
+  { id: 'componentLifecycle', category: 'Lifecycle example', title: 'Component Lifecycle', component: componentLifcycleExample },
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
