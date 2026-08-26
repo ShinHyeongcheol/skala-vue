@@ -43,7 +43,7 @@ const emit = defineEmits(['select-card', 'click-detail', 'toggle-forecast'])
     </div>
 
     <div class="card-actions">
-      <button type="button" @click.stop="emit('click-detail', city.name, city.displayStatus)">
+      <button type="button" @click.stop="emit('click-detail', city.id)">
         상세보기
       </button>
       <button type="button" @click.stop="emit('toggle-forecast', city.id)">

@@ -1,14 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CodeChallengeView from '../views/CodeChallengeView.vue'
-import HandsOnView from '../views/HandsOnView.vue'
+
+const WeatherHomeView = () => import('@/views/WeatherHomeView.vue')
+const WeatherDetailView = () => import('@/views/WeatherDetailView.vue')
+const WeatherAboutView = () => import('@/views/WeatherAboutView.vue')
+const HandsOnLayoutView = () => import('@/views/HandsOnLayoutView.vue')
+const CodeChallengeView = () => import('@/views/CodeChallengeView.vue')
+const HandsOnView = () => import('@/views/HandsOnView.vue')
+const NotFoundView = () => import('@/views/NotFoundView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', redirect: '/hands-on' },
+    {
+      path: '/hands-on',
+      component: HandsOnLayoutView,
+      children: [
+        { path: '', name: 'weather-home', component: WeatherHomeView },
+        { path: 'about', name: 'weather-about', component: WeatherAboutView },
+      ],
+    },
+    { path: '/weather/:cityId', name: 'weather-detail', component: WeatherDetailView },
     { path: '/challenges', name: 'code-challenge', component: CodeChallengeView },
-    { path: '/hands-on', name: 'hands-on', component: HandsOnView },
-    { path: '/:pathMatch(.*)*', redirect: '/hands-on' },
+    { path: '/previous-hands-on', name: 'previous-hands-on', component: HandsOnView },
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
   ],
 })
 
