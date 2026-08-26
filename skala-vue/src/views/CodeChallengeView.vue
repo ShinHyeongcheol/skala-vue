@@ -21,6 +21,7 @@ import watchEffectExample from '../components/practices/codeChallenge/computedWa
 import componentLifcycleExample from '../components/practices/codeChallenge/componentLifecycle/componentLifcycleExample.vue'
 import prosEmitExample from '../components/practices/codeChallenge/propsAndEmit/PropsEmitParent.vue'
 import slotDefaultExample from '../components/practices/codeChallenge/componentSlot/DefaultSlotParent.vue'
+import slotNamedExample from '../components/practices/codeChallenge/componentSlot/NamedSlotParent.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -42,7 +43,8 @@ const practices = [
   { id: 'watchEffectExample', category: 'Computed & Watchers example', title: 'Watch Effect Example', component: watchEffectExample },
   { id: 'componentLifecycle', category: 'Lifecycle example', title: 'Component Lifecycle', component: componentLifcycleExample },
   { id: 'propsEmit', category: 'Props & Emits example', title: 'Props & Emits', component: prosEmitExample },
-  { id: 'slotDefault', category: 'Component Slot example', title: 'Default Slot', component: slotDefaultExample },]
+  { id: 'slotDefault', category: 'Component Slot example', title: 'Default Slot', component: slotDefaultExample },
+  { id: 'slotNamed', category: 'Component Slot example', title: 'Named Slot', component: slotNamedExample },]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
 </script>
