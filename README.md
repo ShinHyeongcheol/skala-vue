@@ -42,7 +42,7 @@ src/
 
 ## Hands-On
 
-### Weather Mockup
+### 1. Weather Mockup
 
 날씨 데이터를 활용해 Vue의 데이터 렌더링, 조건부 UI, 입력 처리, 이벤트를 하나의 화면에 조합했습니다.
 
@@ -64,7 +64,7 @@ v-show와 v-for에 대한 학습을 추가적으로 진행을 해보고자 시�
 - 중첩 `v-for`: 각 도시의 `forecast` 배열을 반복해 시간, 기온, 날씨 상태를 가로 목록으로 표시합니다.
 - `.stop`: 예보 토글 버튼을 눌러도 부모 날씨 카드의 선택 이벤트가 함께 실행되지 않도록 제어했습니다.
 
-### Weather Composition
+### 2. Weather Composition
 
 Weather Mockup을 Composition API 방식으로 확장해, 여러 반응형 상태를 조합하고 감시하는 흐름을 구현했습니다.
 
