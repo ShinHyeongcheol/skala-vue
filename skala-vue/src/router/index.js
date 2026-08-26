@@ -5,7 +5,6 @@ const WeatherDetailView = () => import('@/views/WeatherDetailView.vue')
 const WeatherAboutView = () => import('@/views/WeatherAboutView.vue')
 const HandsOnLayoutView = () => import('@/views/HandsOnLayoutView.vue')
 const CodeChallengeView = () => import('@/views/CodeChallengeView.vue')
-const HandsOnView = () => import('@/views/HandsOnView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 
 const router = createRouter({
@@ -22,7 +21,6 @@ const router = createRouter({
     },
     { path: '/weather/:cityId', name: 'weather-detail', component: WeatherDetailView },
     { path: '/challenges', name: 'code-challenge', component: CodeChallengeView },
-    { path: '/previous-hands-on', name: 'previous-hands-on', component: HandsOnView },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
   ],
 })
