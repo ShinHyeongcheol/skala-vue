@@ -22,7 +22,7 @@ src/
 │   └── HandsOnView.vue             # Hands-On 목록 화면
 └── components/
     ├── handsOn/
-    │   └── WeatherMockup.vue       # 날씨 Mockup Hands-On 과제
+    │   └── WeatherHandsOn.vue      # 날씨 Mockup·Composition Hands-On 과제
     └── practices/
         └── codeChallenge/          # 기능별 실습 컴포넌트
             ├── reactivity/
@@ -63,6 +63,28 @@ v-show와 v-for에 대한 학습을 추가적으로 진행을 해보고자 시�
 - `v-show`: 선택한 도시의 예보 영역을 DOM에 유지한 채 열고 닫습니다.
 - 중첩 `v-for`: 각 도시의 `forecast` 배열을 반복해 시간, 기온, 날씨 상태를 가로 목록으로 표시합니다.
 - `.stop`: 예보 토글 버튼을 눌러도 부모 날씨 카드의 선택 이벤트가 함께 실행되지 않도록 제어했습니다.
+
+### Weather Composition
+
+Weather Mockup을 Composition API 방식으로 확장해, 여러 반응형 상태를 조합하고 감시하는 흐름을 구현했습니다.
+
+| 구현 항목 | 적용 내용 |
+| --- | --- |
+| 검색·선택 상태 | `searchQuery`, `selectedCityInfo`, `selectedWeatherStatus`, `selectedTime`을 `ref`로 관리했습니다. |
+| 검색 결과 계산 | `computed(filteredWeatherList)`에서 도시명 검색어와 날씨 상태 필터를 함께 적용했습니다. 검색어가 없으면 전체 도시를 표시하고, 결과가 없으면 안내 문구를 출력합니다. |
+| 결과 요약 | `computed(visibleCityCount)`로 현재 필터 조건에 맞는 도시 수를 표시했습니다. |
+| 상태 감시 | `watch`로 선택 도시·날씨 상태 변경을 콘솔에 기록하고, `watchEffect`로 검색어 변화를 자동 추적했습니다. |
+
+### 추가 구현 - 시간대별 날씨 필터
+
+Weather Mockup에서 추가했던 시간대별 예보 데이터에 대한 기능을 확장하는 방향으로 추가 기능을 기획했습니다.
+오전 9시와 오후 9시를 추가해 시간대를 조금 더 세분화 했고, 도시 검색에 따른 필터링 기능처럼 날씨나 시간대별로 지역별 날씨 카드가 변하게 수정했습니다.
+상태가 변할 때 마다 콘솔로그에 나타나게 했고, 토글 목록에서도 내가 선택한 시간대를 좀 더 잘 확인할 수 있게 반영했습니다.
+
+- `computed(weatherAtSelectedTime)`: 각 도시의 `forecast` 배열에서 선택한 시각을 찾아 카드의 날씨·기온 표시값으로 변환합니다.
+- `watch(selectedTime)`: 시간 필터가 변경될 때 선택 시간을 콘솔에 기록합니다.
+
+시각의 날씨 정보를 기준으로 동작하도록 구성했습니다.
 
 ## Code Challenge
 
