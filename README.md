@@ -275,6 +275,17 @@ const weatherList = ref([
 
 각 화면 사이를 이동해을 때 Pinia Store를 기반으로 추가한 도시와 예보 정보가 유지됩니다.
 
+### 7. 외부 UI 라이브러리 활용
+
+| 라이브러리 | 사용 위치 | 활용 내용 |
+| --- | --- | --- |
+| `primevue` | `src/main.js`, `WeatherHomeView.vue`, `HandsOnLayoutView.vue` | 입력창·버튼·선택 메뉴·Toast 안내 UI를 제공합니다. `@primeuix/themes`의 Aura 테마를 함께 적용했습니다. |
+| `tsParticles` | `WeatherParticles.vue` | 맑음·구름·비·천둥번개 상태에 따라 배경 입자와 커서 상호작용을 다르게 표시합니다. |
+| `mouse-animations` | `MouseWaterEffects.vue` | 클릭 위치에서 파란 계열 파티클이 물방울처럼 퍼지는 효과를 제공합니다. |
+
+기본적인 vue의 ui 테마를 `primevue`를 이용해 테마를 적용을 시켰습니다.
+그 외에 다양한 라이브러리를 적용시켜보고 싶어 배경입자에 대한 파티클을 적용시키는 `tsParticles`와 마우스 이벤트에 따른 효과를 적용시켜보기 위해 `mouse-animations`을 적용시켰습니다.
+
 ## Code Challenge
 
 Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각 카드는 기본적으로 닫혀 있으며, 필요한 실습을 열어 동작을 확인할 수 있습니다.
