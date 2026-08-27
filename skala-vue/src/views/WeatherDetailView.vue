@@ -19,7 +19,12 @@ const displayTemperature = (celsius) => {
 }
 
 onMounted(() => {
-  city.value = weatherList.find((item) => item.id === route.params.cityId) ?? null
+  city.value = [...weatherList, ...weatherStore.additionalCities]
+    .find((item) => item.id === route.params.cityId) ?? null
+
+  if (city.value && !weatherStore.forecastByCityId[city.value.id]) {
+    weatherStore.fetchForecasts([city.value])
+  }
 })
 </script>
 
@@ -46,7 +51,11 @@ onMounted(() => {
       <section class="forecast-section" aria-labelledby="forecast-title">
         <h2 id="forecast-title">시간대별 예보</h2>
         <div class="forecast-list">
-          <article v-for="forecast in city.forecast" :key="forecast.time" class="forecast-card">
+          <article
+            v-for="forecast in weatherStore.forecastByCityId[city.id] ?? city.forecast"
+            :key="forecast.time"
+            class="forecast-card"
+          >
             <strong>{{ forecast.time }}</strong>
             <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
             <span>{{ forecast.status }}</span>

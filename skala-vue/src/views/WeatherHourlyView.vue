@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
-import { weatherList } from '@/data/weather'
+import { computed, onMounted } from 'vue'
+import { weatherList as weatherData } from '@/data/weather'
 import { useWeatherStore } from '@/stores/weatherStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 
 const weatherStore = useWeatherStore()
 const favoriteStore = useFavoriteStore()
+const cityList = computed(() => [...weatherData, ...weatherStore.additionalCities])
 
 const displayTemperature = (celsius) => {
   if (weatherStore.temperatureUnit === 'fahrenheit') {
@@ -24,8 +25,9 @@ const timeOptions = [
 ]
 
 const weatherAtSelectedTime = computed(() => {
-  return weatherList.map((city) => {
-    const forecast = city.forecast.find((item) => item.time === weatherStore.selectedTime)
+  return cityList.value.map((city) => {
+    const forecasts = weatherStore.forecastByCityId[city.id] ?? city.forecast
+    const forecast = forecasts.find((item) => item.time === weatherStore.selectedTime)
 
     return {
       ...city,
@@ -42,7 +44,13 @@ const hottestCity = computed(() => {
 })
 
 const rainyCities = computed(() => {
-  return weatherAtSelectedTime.value.filter((city) => city.displayStatus === '비')
+  return weatherAtSelectedTime.value.filter((city) => ['비', 'Rain', 'Drizzle', 'Thunderstorm'].includes(city.displayStatus))
+})
+
+onMounted(() => {
+  if (Object.keys(weatherStore.forecastByCityId).length === 0) {
+    weatherStore.fetchForecasts(cityList.value)
+  }
 })
 </script>
 
@@ -68,6 +76,10 @@ const rainyCities = computed(() => {
           {{ time.label }}
         </button>
       </div>
+      <p v-if="weatherStore.isForecastLoading" class="api-status">실시간 시간대별 예보를 불러오는 중입니다.</p>
+      <p v-else-if="weatherStore.forecastErrorMessage" class="api-status api-error">
+        {{ weatherStore.forecastErrorMessage }}
+      </p>
     </section>
 
     <section class="summary-panel" aria-label="선택 시간 요약">
@@ -104,6 +116,8 @@ button { padding: 0.5rem 0.75rem; color: #1e293b; font: inherit; font-size: 0.87
 button:hover { background: #f1f5f9; }
 button.active { color: #fff; background: #2563eb; border-color: #2563eb; }
 .summary-panel { display: grid; gap: 0.375rem; }
+.api-status { color: #475569; font-size: 0.8125rem; }
+.api-error { color: #b91c1c; font-weight: 700; }
 .weather-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
 .weather-card { display: grid; gap: 0.375rem; padding: 1rem; background: #fff; border: 1px solid #dbe2ea; border-radius: 0.5rem; }
 .weather-card.favorite { background: #fffbeb; border-color: #fbbf24; box-shadow: inset 0 0 0 1px #fbbf24; }
