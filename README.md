@@ -238,6 +238,43 @@ Math.round((celsius * 9) / 5 + 32)
 
 대시보드 카드에서는 상세보기 버튼 위에 즐겨찾기 버튼을 배치했고, 상세 화면에서도 즐겨찾기를 변경할 수 있게 했습니다. 시간대별 날씨 화면의 경우 즐겨찾기가 되어있을 경우 카드 배경과 테두리 색을 변경해 구분했습니다.
 
+### 6. Weather Axios
+
+OpenWeatherMap API를 연결해 기존 Mock Data 기반 날씨 대시보드에 실제 현재 날씨와 시간대별 예보를 적용했습니다. API 키는 `.env`의 `VITE_OPENWEATHER_API_KEY`로 관리하고, Axios 요청 코드는 `src/api/openWeather.js`에 분리했습니다.
+
+| 구현 항목 | 적용 내용 |
+| --- | --- |
+| 현재 날씨 | Current Weather API로 서울·수원·부산·판교·용인의 실제 기온과 날씨 상태를 요청합니다. 한글 화면명과 API 요청용 영문 이름(`apiName`)을 분리해 `Seoul,KR`처럼 요청했습니다. |
+| 시간대별 예보 | Forecast API 응답에서 한국 시간 기준 `09:00`, `12:00`, `15:00`, `18:00`, `21:00` 항목을 추려 카드의 시간대별 예보와 시간대별 날씨 화면에 사용했습니다. |
+| 상태 공유 | `weatherStore`에 `forecastByCityId`, 로딩·오류 상태, `fetchForecasts()`를 추가했습니다. 대시보드·상세 화면·시간대별 날씨 화면이 같은 예보 데이터를 참조합니다. |
+| 현재 날씨와 예보 분리 | 대시보드 카드의 현재 기온·상태는 Current Weather API 값으로 고정했습니다. 시간 필터는 현재 날씨를 변경하지 않고, 시간대별 예보의 선택 표시와 시간대별 날씨 비교에만 사용합니다. |
+| 원하는 지역 추가 | Geocoding API로 입력한 한글·영문 지역명을 좌표로 변환한 뒤, 해당 좌표의 현재 날씨와 예보를 병렬 요청합니다. 성공한 지역은 지역별 날씨 목록 아래에 추가됩니다. |
+
+날씨 상태값은 매핑 전 단계로 `Clear`, `Clouds`, `Rain` 등 OpenWeatherMap의 영어 원문을 그대로 표시했습니다. 각 도시의 원본 응답은 콘솔에서 확인할 수 있도록 했습니다.
+
+#### 발생한 이슈 및 해결 - 화면 이동 후 추가 도시가 사라지는 문제
+
+**문제 상황**
+
+새로 추가한 지역이 대시보드와 시간대별 날씨 화면에서는 모두 표시되었지만, 다시 대시보드로 돌아오면 목록에서 사라졌습니다.
+
+**원인**
+
+`WeatherHomeView`는 화면에 다시 진입할 때 로컬 `weatherList`를 기존 Mock Data인 `weatherData`만으로 새로 생성했습니다. 반면 사용자 추가 도시는 `weatherStore.additionalCities`에 저장되어 있었으므로, 시간대별 날씨 화면에서는 Store를 참조해 보이지만 대시보드 초기 목록에는 합쳐지지 않았습니다.
+
+**해결**
+
+사용자 추가 도시는 `weatherStore.addCustomCity()` Action으로 Store에 저장하고, 대시보드 생성 시에도 Mock Data와 Store의 추가 도시를 함께 초기화하도록 수정했습니다.
+
+```js
+const weatherList = ref([
+  ...weatherData,
+  ...weatherStore.additionalCities,
+])
+```
+
+각 화면 사이를 이동해을 때 Pinia Store를 기반으로 추가한 도시와 예보 정보가 유지됩니다.
+
 ## Code Challenge
 
 Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각 카드는 기본적으로 닫혀 있으며, 필요한 실습을 열어 동작을 확인할 수 있습니다.
