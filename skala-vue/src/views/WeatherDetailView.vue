@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { weatherList } from '@/data/weather'
 import { useWeatherStore } from '@/stores/weatherStore'
@@ -9,6 +9,17 @@ const route = useRoute()
 const city = ref(null)
 const weatherStore = useWeatherStore()
 const favoriteStore = useFavoriteStore()
+
+const displayedCurrentWeather = computed(() => {
+  if (!city.value) {
+    return null
+  }
+
+  return {
+    ...city.value,
+    ...weatherStore.currentWeatherByCityId[city.value.id],
+  }
+})
 
 const displayTemperature = (celsius) => {
   if (weatherStore.temperatureUnit === 'fahrenheit') {
@@ -44,8 +55,8 @@ onMounted(() => {
 
       <article class="current-weather">
         <h2>현재 날씨</h2>
-        <p><strong>{{ city.status }}</strong></p>
-        <p class="temperature">{{ displayTemperature(city.temp) }}{{ weatherStore.temperatureSymbol }}</p>
+        <p><strong>{{ displayedCurrentWeather.status }}</strong></p>
+        <p class="temperature">{{ displayTemperature(displayedCurrentWeather.temp) }}{{ weatherStore.temperatureSymbol }}</p>
       </article>
 
       <section class="forecast-section" aria-labelledby="forecast-title">

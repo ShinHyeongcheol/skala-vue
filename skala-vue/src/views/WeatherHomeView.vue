@@ -7,6 +7,7 @@ import { useWeatherStore } from '@/stores/weatherStore'
 import BaseCard from '@/components/handsOn/weatherComponent/BaseCard.vue'
 import SearchBar from '@/components/handsOn/weatherComponent/SearchBar.vue'
 import WeatherCard from '@/components/handsOn/weatherComponent/WeatherCard.vue'
+import WeatherParticles from '@/components/handsOn/weatherComponent/WeatherParticles.vue'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
@@ -16,9 +17,6 @@ const searchQuery = ref('')
 const selectedCityInfo = ref(null)
 const openForecastCityId = ref(null)
 const selectedWeatherStatus = ref('전체')
-const isWeatherLoading = ref(false)
-const weatherErrorMessage = ref('')
-const lastUpdated = ref('')
 const customCityQuery = ref('')
 const isCustomCityLoading = ref(false)
 const customCityErrorMessage = ref('')
@@ -33,11 +31,14 @@ const timeOptions = [
 
 const weatherAtSelectedTime = computed(() => {
   return weatherList.value.map((city) => {
+    const savedCurrentWeather = weatherStore.currentWeatherByCityId[city.id]
+    const currentCity = { ...city, ...savedCurrentWeather }
+
     return {
-      ...city,
+      ...currentCity,
       // 현재 날씨는 시간 필터와 관계없이 Current Weather API 값을 유지한다.
-      displayTemp: city.temp,
-      displayStatus: city.status,
+      displayTemp: currentCity.temp,
+      displayStatus: currentCity.status,
       // 시간 필터는 시간대별 예보 목록과 시간대별 날씨 화면에서만 사용한다.
       forecast: weatherStore.forecastByCityId[city.id] ?? city.forecast,
     }
@@ -60,6 +61,16 @@ const filteredWeatherList = computed(() => {
 
 const visibleCityCount = computed(() => filteredWeatherList.value.length)
 
+const particleWeatherStatus = computed(() => {
+  if (selectedCityInfo.value) {
+    return selectedCityInfo.value.displayStatus ?? selectedCityInfo.value.status
+  }
+
+  return weatherAtSelectedTime.value.find((city) => ['Rain', 'Drizzle', 'Thunderstorm', '비'].includes(city.displayStatus))?.displayStatus
+    ?? weatherAtSelectedTime.value.find((city) => ['Clouds', '구름', '흐림'].includes(city.displayStatus))?.displayStatus
+    ?? 'Clear'
+})
+
 watch(selectedCityInfo, (city) => {
   if (city) {
     console.log(`[watch] 선택 도시: ${city.name}`)
@@ -68,6 +79,12 @@ watch(selectedCityInfo, (city) => {
 
 watch(selectedWeatherStatus, (status) => {
   console.log(`[watch] 날씨 필터: ${status}`)
+})
+
+watch(() => weatherStore.lastUpdated, (updatedAt) => {
+  if (updatedAt) {
+    selectedWeatherStatus.value = '전체'
+  }
 })
 
 watch(() => weatherStore.selectedTime, (time) => {
@@ -130,6 +147,11 @@ const addCustomCity = async () => {
 
     weatherList.value = [...weatherList.value, city]
     weatherStore.addCustomCity(city)
+    weatherStore.setCurrentWeather(cityId, {
+      temp: city.temp,
+      status: city.status,
+      isLiveWeather: true,
+    })
     weatherStore.setForecast(cityId, forecasts)
     customCityQuery.value = ''
     selectedWeatherStatus.value = '전체'
@@ -143,65 +165,11 @@ const addCustomCity = async () => {
   }
 }
 
-const loadCurrentWeather = async () => {
-  isWeatherLoading.value = true
-  weatherErrorMessage.value = ''
-
-  try {
-    const results = await Promise.allSettled(
-      weatherList.value.map(async (city) => getCurrentWeather(city.apiName)),
-    )
-
-    let successCount = 0
-
-    weatherList.value = weatherList.value.map((city, index) => {
-      const result = results[index]
-
-      if (result.status !== 'fulfilled') {
-        console.error(`[OpenWeatherMap] ${city.name} 현재 날씨 요청 실패:`, result.reason)
-        return city
-      }
-
-      const data = result.value.data
-      successCount += 1
-      console.log(`[OpenWeatherMap] ${city.name} 현재 날씨 원본:`, data)
-
-      return {
-        ...city,
-        temp: Math.round(data.main.temp),
-        // 매핑 전 단계: API가 전달한 영어 상태값을 그대로 사용한다.
-        status: data.weather?.[0]?.main ?? city.status,
-        rawWeatherDescription: data.weather?.[0]?.description ?? '',
-        isLiveWeather: true,
-      }
-    })
-
-    if (successCount === 0) {
-      weatherErrorMessage.value = '실시간 날씨를 가져오지 못했습니다. 기존 Mock 데이터를 표시합니다.'
-    } else if (successCount < weatherList.value.length) {
-      weatherErrorMessage.value = `${successCount}개 도시의 실시간 날씨만 갱신했습니다.`
-    }
-
-    if (successCount > 0) {
-      selectedWeatherStatus.value = '전체'
-      lastUpdated.value = new Intl.DateTimeFormat('ko-KR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(new Date())
-
-      await weatherStore.fetchForecasts(weatherList.value)
-    }
-  } catch (error) {
-    console.error('[OpenWeatherMap] 현재 날씨 갱신 중 오류:', error)
-    weatherErrorMessage.value = '실시간 날씨를 가져오지 못했습니다. 기존 Mock 데이터를 표시합니다.'
-  } finally {
-    isWeatherLoading.value = false
-  }
-}
 </script>
 
 <template>
   <section class="weather" aria-labelledby="weather-title">
+    <WeatherParticles :weather-status="particleWeatherStatus" />
     <h2 id="weather-title">🌤️ 날씨 대시보드</h2>
 
     <BaseCard title="🔍 도시 검색">
@@ -209,22 +177,6 @@ const loadCurrentWeather = async () => {
         :search-query="searchQuery"
         @update-query="searchQuery = $event"
       />
-
-      <button
-        type="button"
-        class="weather-refresh-button"
-        :disabled="isWeatherLoading || weatherStore.isForecastLoading"
-        @click="loadCurrentWeather"
-      >
-        {{ isWeatherLoading || weatherStore.isForecastLoading ? '실시간 날씨와 예보를 불러오는 중...' : '실시간 날씨·예보 갱신' }}
-      </button>
-      <p v-if="lastUpdated" class="api-status">마지막 갱신: {{ lastUpdated }}</p>
-      <p v-if="weatherErrorMessage" class="api-status api-error" aria-live="polite">
-        {{ weatherErrorMessage }}
-      </p>
-      <p v-if="weatherStore.forecastErrorMessage" class="api-status api-error" aria-live="polite">
-        {{ weatherStore.forecastErrorMessage }}
-      </p>
 
       <hr class="filter-divider" />
 
@@ -307,9 +259,16 @@ const loadCurrentWeather = async () => {
 
 <style scoped>
 .weather {
+  position: relative;
+  isolation: isolate;
   display: grid;
   gap: 1rem;
   color: #1e293b;
+}
+
+.weather > :not(.weather-particles) {
+  position: relative;
+  z-index: 1;
 }
 
 h2 {
@@ -412,24 +371,6 @@ button:hover {
 
 .time-filter + p {
   font-size: 0.875rem;
-}
-
-.weather-refresh-button {
-  justify-self: start;
-  color: #fff;
-  font-weight: 700;
-  background: #2563eb;
-  border-color: #2563eb;
-}
-
-.weather-refresh-button:hover {
-  background: #1d4ed8;
-}
-
-.weather-refresh-button:disabled {
-  cursor: not-allowed;
-  background: #94a3b8;
-  border-color: #94a3b8;
 }
 
 .api-status {
