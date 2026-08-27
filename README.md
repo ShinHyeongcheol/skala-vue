@@ -1,5 +1,7 @@
 # SKALA Vue 실습 기록
 
+배포 링크 : https://skala-vue-ashen.vercel.app/hands-on
+
 ## 개요
 
 Vue 3와 Vite를 기반으로 Vue의 핵심 문법과 화면 동작을 실습하는 프로젝트입니다. 현재는 `Code Challenge`를 통해 작은 예제를 작성하고, 각 기능이 상태와 화면에 어떻게 반영되는지 확인하고 있습니다.
