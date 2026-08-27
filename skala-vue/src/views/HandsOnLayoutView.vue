@@ -1,5 +1,7 @@
 <script setup>
 import { computed } from 'vue'
+import Button from 'primevue/button'
+import Message from 'primevue/message'
 import { weatherList } from '@/data/weather'
 import UnitToggler from '@/components/handsOn/weatherComponent/UnitToggler.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
@@ -30,23 +32,21 @@ const refreshWeather = () => {
 
     <div class="unit-settings">
       <UnitToggler />
-      <button
-        type="button"
-        class="weather-refresh-button"
+      <Button
+        :label="weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading
+          ? '실시간 날씨와 예보를 불러오는 중...'
+          : '실시간 날씨·예보 갱신'"
+        :loading="weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading"
         :disabled="weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading"
         @click="refreshWeather"
-      >
-        {{ weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading
-          ? '실시간 날씨와 예보를 불러오는 중...'
-          : '실시간 날씨·예보 갱신' }}
-      </button>
+      />
       <p v-if="weatherStore.lastUpdated" class="api-status">마지막 갱신: {{ weatherStore.lastUpdated }}</p>
-      <p v-if="weatherStore.currentWeatherErrorMessage" class="api-status api-error" aria-live="polite">
+      <Message v-if="weatherStore.currentWeatherErrorMessage" severity="error" :closable="false" class="api-error" aria-live="polite">
         {{ weatherStore.currentWeatherErrorMessage }}
-      </p>
-      <p v-if="weatherStore.forecastErrorMessage" class="api-status api-error" aria-live="polite">
+      </Message>
+      <Message v-if="weatherStore.forecastErrorMessage" severity="error" :closable="false" class="api-error" aria-live="polite">
         {{ weatherStore.forecastErrorMessage }}
-      </p>
+      </Message>
     </div>
 
     <RouterView />
@@ -63,10 +63,7 @@ h1 { color: var(--color-heading); font-size: clamp(2rem, 5vw, 3rem); font-weight
 .weather-nav a { padding: 0.5rem 0.75rem; color: var(--color-text); font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 1px solid var(--color-border); border-radius: 0.375rem; }
 .weather-nav a.router-link-exact-active { color: #1d4ed8; background: #eff6ff; border-color: #93c5fd; }
 .unit-settings { display: grid; justify-items: end; gap: 0.5rem; }
-.weather-refresh-button { padding: 0.5rem 0.75rem; color: #fff; font: inherit; font-size: 0.8125rem; font-weight: 700; cursor: pointer; background: #2563eb; border: 1px solid #2563eb; border-radius: 0.375rem; }
-.weather-refresh-button:hover { background: #1d4ed8; }
-.weather-refresh-button:disabled { cursor: not-allowed; background: #94a3b8; border-color: #94a3b8; }
 .api-status { max-width: 17rem; color: var(--color-text); font-size: 0.75rem; text-align: right; }
-.api-error { color: #dc2626; font-weight: 700; }
+.api-error { max-width: 17rem; font-size: 0.75rem; text-align: left; }
 @media (max-width: 640px) { .page-heading { align-items: start; flex-direction: column; } }
 </style>
