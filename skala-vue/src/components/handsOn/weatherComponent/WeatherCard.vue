@@ -1,5 +1,6 @@
 <script setup>
 import { useWeatherStore } from '@/stores/weatherStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
 
 defineProps({
   city: {
@@ -18,6 +19,7 @@ defineProps({
 
 const emit = defineEmits(['select-card', 'click-detail', 'toggle-forecast'])
 const weatherStore = useWeatherStore()
+const favoriteStore = useFavoriteStore()
 
 const displayTemperature = (celsius) => {
   if (weatherStore.temperatureUnit === 'fahrenheit') {
@@ -38,7 +40,7 @@ const displayTemperature = (celsius) => {
     @keydown.space.prevent="emit('select-card', city)"
   >
     <div class="weather-content">
-      <h4>{{ city.name }}</h4>
+      <h4>{{ city.name }}<span v-if="favoriteStore.isFavorite(city.id)"> ⭐</span></h4>
       <p>현재 날씨: {{ city.displayStatus }}</p>
       <p>현재 기온: {{ displayTemperature(city.displayTemp) }}{{ weatherStore.temperatureSymbol }}</p>
 
@@ -54,6 +56,13 @@ const displayTemperature = (celsius) => {
     </div>
 
     <div class="card-actions">
+      <button
+        type="button"
+        class="favorite-button"
+        @click.stop="favoriteStore.toggleFavorite(city.id)"
+      >
+        {{ favoriteStore.isFavorite(city.id) ? '★ 즐겨찾기 해제' : '☆ 즐겨찾기' }}
+      </button>
       <button type="button" @click.stop="emit('click-detail', city.id)">
         상세보기
       </button>
@@ -137,6 +146,16 @@ p {
 .card-actions {
   display: grid;
   gap: 0.5rem;
+}
+
+.favorite-button {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #fbbf24;
+}
+
+.favorite-button:hover {
+  background: #fde68a;
 }
 
 button {

@@ -3,10 +3,12 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { weatherList } from '@/data/weather'
 import { useWeatherStore } from '@/stores/weatherStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
 
 const route = useRoute()
 const city = ref(null)
 const weatherStore = useWeatherStore()
+const favoriteStore = useFavoriteStore()
 
 const displayTemperature = (celsius) => {
   if (weatherStore.temperatureUnit === 'fahrenheit') {
@@ -24,10 +26,15 @@ onMounted(() => {
 <template>
   <section class="weather-detail" aria-labelledby="weather-detail-title">
     <template v-if="city">
-      <header class="page-heading">
+      <header class="page-heading detail-heading">
         <p class="eyebrow">Weather Detail</p>
-        <h1 id="weather-detail-title">{{ city.name }} 상세 날씨</h1>
+        <h1 id="weather-detail-title">
+          <span>{{ city.name }}</span> 상세 날씨 <span v-if="favoriteStore.isFavorite(city.id)" class="favorite-mark">⭐</span>
+        </h1>
         <p>도시 ID: {{ city.id }}</p>
+        <button class="favorite-button" type="button" @click="favoriteStore.toggleFavorite(city.id)">
+          {{ favoriteStore.isFavorite(city.id) ? '★ 즐겨찾기 해제' : '☆ 즐겨찾기' }}
+        </button>
       </header>
 
       <article class="current-weather">
@@ -61,15 +68,20 @@ onMounted(() => {
 <style scoped>
 .weather-detail { display: grid; gap: 1.5rem; color: #1e293b; }
 .page-heading, .forecast-section { display: grid; gap: 0.5rem; }
+.detail-heading { color: var(--color-text); }
+.detail-heading h1 { color: var(--color-heading); }
 .eyebrow { color: #2563eb; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 h1, h2 { font-weight: 700; }
 h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); }
 h2 { font-size: 1.125rem; }
+.favorite-mark { margin: 0 0.25rem; }
 .current-weather, .forecast-section, .not-found-city { padding: 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; }
 .current-weather { display: grid; gap: 0.5rem; }
 .temperature { color: #2563eb; font-size: 2rem; font-weight: 800; }
 .forecast-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; }
 .forecast-card { display: grid; gap: 0.25rem; padding: 0.75rem; background: #fff; border: 1px solid #dbe2ea; border-radius: 0.5rem; }
+.favorite-button { justify-self: start; padding: 0.625rem 0.875rem; color: #92400e; font: inherit; font-size: 0.875rem; font-weight: 700; cursor: pointer; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 0.375rem; }
+.favorite-button:hover { background: #fde68a; }
 .back-link { justify-self: start; padding: 0.625rem 0.875rem; color: #fff; font-weight: 700; text-decoration: none; background: #2563eb; border-radius: 0.375rem; }
 .back-link:hover { background: #1d4ed8; }
 @media (max-width: 640px) { .forecast-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

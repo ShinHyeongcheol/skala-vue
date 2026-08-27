@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useWeatherStore = defineStore('weather', () => {
     const temperatureUnit = ref('celsius')
+    const selectedTime = ref('12:00')
 
     const temperatureSymbol = computed(() => {
             return temperatureUnit.value === 'celsius' ? '°C' : '°F'
@@ -13,5 +14,9 @@ export const useWeatherStore = defineStore('weather', () => {
         console.log(`[Pinia] 온도 단위 변경: ${temperatureUnit.value}`)
     }
 
-    return { temperatureUnit, temperatureSymbol, toggleTemperatureUnit }
+    const setSelectedTime = (time) => {
+        selectedTime.value = time
+    }
+
+    return { temperatureUnit, temperatureSymbol, selectedTime, toggleTemperatureUnit, setSelectedTime }
 })

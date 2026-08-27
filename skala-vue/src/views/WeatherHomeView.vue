@@ -2,17 +2,18 @@
 import { computed, ref, watch, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { weatherList as weatherData } from '@/data/weather'
+import { useWeatherStore } from '@/stores/weatherStore'
 import BaseCard from '@/components/handsOn/weatherComponent/BaseCard.vue'
 import SearchBar from '@/components/handsOn/weatherComponent/SearchBar.vue'
 import WeatherCard from '@/components/handsOn/weatherComponent/WeatherCard.vue'
 
 const weatherList = ref(weatherData)
 const router = useRouter()
+const weatherStore = useWeatherStore()
 const searchQuery = ref('')
 const selectedCityInfo = ref(null)
 const openForecastCityId = ref(null)
 const selectedWeatherStatus = ref('전체')
-const selectedTime = ref('12:00')
 
 const timeOptions = [
   { value: '09:00', label: '오전 9시' },
@@ -24,7 +25,7 @@ const timeOptions = [
 
 const weatherAtSelectedTime = computed(() => {
   return weatherList.value.map((city) => {
-    const forecast = city.forecast.find((item) => item.time === selectedTime.value)
+    const forecast = city.forecast.find((item) => item.time === weatherStore.selectedTime)
 
     return {
       ...city,
@@ -56,7 +57,7 @@ watch(selectedWeatherStatus, (status) => {
   console.log(`[watch] 날씨 필터: ${status}`)
 })
 
-watch(selectedTime, (time) => {
+watch(() => weatherStore.selectedTime, (time) => {
   console.log(`[watch] 선택 시간: ${time}`)
 })
 
@@ -106,9 +107,9 @@ const toggleForecast = (cityId) => {
           :key="time.value"
           type="button"
           class="time-button"
-          :class="{ active: selectedTime === time.value }"
-          :aria-pressed="selectedTime === time.value"
-          @click="selectedTime = time.value"
+          :class="{ active: weatherStore.selectedTime === time.value }"
+          :aria-pressed="weatherStore.selectedTime === time.value"
+          @click="weatherStore.setSelectedTime(time.value)"
         >
           {{ time.label }}
         </button>
@@ -122,7 +123,7 @@ const toggleForecast = (cityId) => {
           v-for="city in filteredWeatherList"
           :key="city.id"
           :city="city"
-          :selected-time="selectedTime"
+        :selected-time="weatherStore.selectedTime"
           :is-forecast-open="openForecastCityId === city.id"
           @select-card="selectCity"
           @click-detail="showDetail"
