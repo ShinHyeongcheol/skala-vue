@@ -2,6 +2,7 @@ export const weatherList = [
   {
     id: 'city_01',
     name: '서울',
+    apiName: 'Seoul,KR',
     temp: 28,
     status: '맑음',
     forecast: [
@@ -15,6 +16,7 @@ export const weatherList = [
   {
     id: 'city_02',
     name: '수원',
+    apiName: 'Suwon,KR',
     temp: 24,
     status: '비',
     forecast: [
@@ -28,6 +30,7 @@ export const weatherList = [
   {
     id: 'city_03',
     name: '부산',
+    apiName: 'Busan,KR',
     temp: 26,
     status: '구름',
     forecast: [
@@ -41,6 +44,7 @@ export const weatherList = [
   {
     id: 'city_04',
     name: '판교',
+    apiName: 'Seongnam,KR',
     temp: 27,
     status: '맑음',
     forecast: [
@@ -54,6 +58,7 @@ export const weatherList = [
   {
     id: 'city_05',
     name: '용인',
+    apiName: 'Yongin,KR',
     temp: 23,
     status: '비',
     forecast: [
