@@ -23,6 +23,9 @@ import prosEmitExample from '../components/practices/codeChallenge/propsAndEmit/
 import slotDefaultExample from '../components/practices/codeChallenge/componentSlot/DefaultSlotParent.vue'
 import slotNamedExample from '../components/practices/codeChallenge/componentSlot/NamedSlotParent.vue'
 import slotScopedExample from '../components/practices/codeChallenge/componentSlot/ScopedSlotParent.vue'
+import StoreCounter from '../components/practices/codeChallenge/pinia/StoreCounter.vue'
+import AxiosWeather from '../components/practices/codeChallenge/axios/AxiosWeather.vue'
+import AxiosJson from '../components/practices/codeChallenge/axios/AxiosJson.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -47,6 +50,9 @@ const practices = [
   { id: 'slotDefault', category: 'Component Slot example', title: 'Default Slot', component: slotDefaultExample },
   { id: 'slotNamed', category: 'Component Slot example', title: 'Named Slot', component: slotNamedExample },
   { id: 'slotScoped', category: 'Component Slot example', title: 'Scoped Slot', component: slotScopedExample },
+  { id: 'storeCounter', category: 'Pinia example', title: 'Store Counter', component: StoreCounter },
+  { id: 'axiosWeather', category: 'Axios example', title: 'Axios Weather', component: AxiosWeather },
+  { id: 'axiosJson', category: 'Axios example', title: 'Axios JSON', component: AxiosJson }
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
@@ -92,7 +98,8 @@ h1, h2 { color: var(--color-heading); font-weight: 700; line-height: 1.2; }
 h1 { font-size: clamp(2rem, 5vw, 3rem); }
 h2 { font-size: 1.25rem; }
 .practice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
-.practice-card { display: grid; gap: 1.5rem; padding: 1.5rem; background: var(--color-background-soft); border: 1px solid var(--color-border); border-radius: 0.75rem; }
+.practice-card { display: grid; min-width: 0; gap: 1.5rem; padding: 1.5rem; background: var(--color-background-soft); border: 1px solid var(--color-border); border-radius: 0.75rem; }
+.practice-card > div { min-width: 0; }
 .card-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
 .card-heading > div { display: grid; gap: 0.25rem; }
 .card-toggle { flex: 0 0 auto; padding: 0.375rem 0.625rem; color: #2563eb; font: inherit; font-size: 0.8125rem; font-weight: 700; background: transparent; border: 1px solid #93c5fd; border-radius: 0.375rem; cursor: pointer; }
