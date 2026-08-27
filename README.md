@@ -29,6 +29,7 @@ src/
 ├── data/
 │   └── weather.js                   # 홈·상세 화면에서 공유하는 날씨 Mock Data
 ├── stores/
+│   ├── counter.js                    # Pinia Counter 실습 Store
 │   ├── weatherStore.js               # 온도 단위·선택 시간 전역 상태
 │   └── favoriteStore.js              # 즐겨찾는 도시 전역 상태
 └── components/
@@ -47,7 +48,8 @@ src/
             ├── form/
             ├── componentLifecycle/
             ├── propsAndEmit/
-            └── componentSlot/
+            ├── componentSlot/
+            └── axios/               # Axios HTTP 통신 실습
 ```
 
 ### 화면 구성
@@ -56,6 +58,24 @@ src/
 - 기본 경로(`/`)는 `/hands-on`으로 이동합니다. 상단 메뉴는 `Hands-On`과 `Code Challenge` 화면으로 구성했습니다.
 - `CodeChallengeView.vue`는 실습 컴포넌트를 2열 카드 그리드로 표시합니다. 각 카드는 기본적으로 닫혀 있고, `열기/접기` 토글로 필요한 예제만 확인할 수 있습니다.
 - `HandsOnLayoutView.vue`는 Hands-On 안내와 내부 메뉴를 공통으로 표시하고, 하위 `<RouterView />`에 날씨 관련 화면을 렌더링합니다.
+
+## 환경 변수 설정
+
+OpenWeatherMap API 등 프로젝트에서 사용하는 외부 설정값은 코드에 직접 작성하지 않고 Vite 환경 변수로 관리한다. Hands-On과 Code Challenge 실습에서 공통으로 사용할 수 있다.
+
+프로젝트의 `skala-vue` 폴더에서 예제 파일을 복사한 뒤 발급받은 키를 입력한다.
+
+```bash
+cp .env.example .env
+```
+
+```env
+VITE_OPENWEATHER_API_KEY=발급받은_OpenWeatherMap_API_키
+```
+
+- `VITE_` 접두사가 있는 환경 변수만 클라이언트 코드의 `import.meta.env`에서 사용할 수 있다.
+- `.env`는 Git에 포함하지 않고, 공유 가능한 변수 이름만 `.env.example`에 관리한다.
+- `.env` 값을 바꾼 경우 개발 서버를 다시 실행해야 한다.
 
 
 ## Hands-On
@@ -294,9 +314,27 @@ Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각
 | `NamedSlotParent.vue`, `NamedSlotChild.vue` | `v-slot:header`, 이름 있는 슬롯 | 카드의 헤더와 본문처럼 목적이 다른 영역을 이름으로 구분해 부모가 원하는 위치에 콘텐츠를 주입했습니다. |
 | `ScopedSlotParent.vue`, `ScopedSlotChild.vue` | 슬롯 props, `v-slot` | 자식의 `message`, `userCount` 데이터를 슬롯 props로 부모에 전달하고, 부모가 받은 데이터로 마크업을 구성했습니다. |
 
+### 10. Pinia State Management
+
+| 실습 | 사용한 기능 | 학습 내용 |
+| --- | --- | --- |
+| `StoreCounter.vue`, `counter.js` | `defineStore()`, State, Getters, Actions, `storeToRefs()` | `count`를 전역 State로 관리하고, `doubleCount` Getter로 파생 값을 만들었습니다. `increment`, `decrement`, `reset` Action으로 상태를 변경했으며, `storeToRefs()`를 통해 Store의 반응형 State와 Getter를 템플릿에서 안전하게 사용했습니다. |
+
+Vue Devtools의 Pinia 탭에서 `count` 값과 Action 실행에 따른 전역 상태 변화를 확인했습니다.
+
+### 11. Axios HTTP 통신
+
+| 실습 | 사용한 기능 | 학습 내용 |
+| --- | --- | --- |
+| `AxiosWeather.vue` | `axios.get()`, `params`, `async / await`, `try / catch / finally` | 서울의 실시간 날씨를 GET 요청으로 가져왔습니다. 요청 파라미터를 `params` 객체로 분리하고, 로딩·성공·실패 상태에 따라 화면을 다르게 표시했습니다. |
+| `AxiosJson.vue` | `axios.get()`, `axios.post()`, `axios.delete()`, `onMounted`, `v-model.trim` | JSONPlaceholder API를 이용해 목록 조회·게시글 등록·삭제 흐름을 구현했습니다. 요청 중에는 버튼을 비활성화하고, 성공·실패 상태를 로그 패널에 표시해 UI 상태를 동기화했습니다. |
+
+`AxiosJson.vue`의 삭제는 JSONPlaceholder의 Mock API 응답을 바탕으로 화면 목록을 갱신하는 실습이다. 실제 서버 데이터가 영구적으로 삭제되는 것은 아니다.
+
 
 ### 확인 방법
 
 1. `npm run dev`로 개발 서버를 실행합니다.
 2. 기본 경로에서 Hands-On 화면을 확인하고, 상단의 `Code Challenge` 메뉴로 이동합니다.
 3. 각 카드의 `열기` 버튼을 눌러 입력, 클릭, 상태 변경에 따른 화면 변화를 확인합니다.
+4. Axios Weather 실습은 환경 변수 설정 후 `실시간 서울 날씨 가져오기` 버튼을 눌러 응답을 확인합니다.
