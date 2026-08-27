@@ -1,4 +1,7 @@
 <script setup>
+import { useWeatherStore } from '@/stores/weatherStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
+
 defineProps({
   city: {
     type: Object,
@@ -15,6 +18,16 @@ defineProps({
 })
 
 const emit = defineEmits(['select-card', 'click-detail', 'toggle-forecast'])
+const weatherStore = useWeatherStore()
+const favoriteStore = useFavoriteStore()
+
+const displayTemperature = (celsius) => {
+  if (weatherStore.temperatureUnit === 'fahrenheit') {
+    return Math.round((celsius * 9) / 5 + 32)
+  }
+
+  return celsius
+}
 </script>
 
 <template>
@@ -27,15 +40,15 @@ const emit = defineEmits(['select-card', 'click-detail', 'toggle-forecast'])
     @keydown.space.prevent="emit('select-card', city)"
   >
     <div class="weather-content">
-      <h4>{{ city.name }}</h4>
+      <h4>{{ city.name }}<span v-if="favoriteStore.isFavorite(city.id)"> ⭐</span></h4>
       <p>현재 날씨: {{ city.displayStatus }}</p>
-      <p>현재 기온: {{ city.displayTemp }}°C</p>
+      <p>현재 기온: {{ displayTemperature(city.displayTemp) }}{{ weatherStore.temperatureSymbol }}</p>
 
       <span v-if="city.displayTemp >= 25" class="temperature-label hot">
-        🔥 더움 (25도 이상)
+        🔥 더움 ({{ weatherStore.temperatureUnit === 'fahrenheit' ? '77°F' : '25°C' }} 이상)
       </span>
       <span v-else class="temperature-label cool">
-        ❄️ 선선함 (25도 미만)
+        ❄️ 선선함 ({{ weatherStore.temperatureUnit === 'fahrenheit' ? '77°F' : '25°C' }} 미만)
       </span>
       <span v-if="city.displayStatus === '비'" class="weather-label rain">
         ☔ 비 오는 중
@@ -43,6 +56,13 @@ const emit = defineEmits(['select-card', 'click-detail', 'toggle-forecast'])
     </div>
 
     <div class="card-actions">
+      <button
+        type="button"
+        class="favorite-button"
+        @click.stop="favoriteStore.toggleFavorite(city.id)"
+      >
+        {{ favoriteStore.isFavorite(city.id) ? '★ 즐겨찾기 해제' : '☆ 즐겨찾기' }}
+      </button>
       <button type="button" @click.stop="emit('click-detail', city.id)">
         상세보기
       </button>
@@ -58,7 +78,7 @@ const emit = defineEmits(['select-card', 'click-detail', 'toggle-forecast'])
         :class="{ selected: forecast.time === selectedTime }"
       >
         <strong>{{ forecast.time }}</strong>
-        <span>{{ forecast.temp }}°C</span>
+        <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
         <span>{{ forecast.status }}</span>
       </p>
     </div>
@@ -126,6 +146,16 @@ p {
 .card-actions {
   display: grid;
   gap: 0.5rem;
+}
+
+.favorite-button {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #fbbf24;
+}
+
+.favorite-button:hover {
+  background: #fde68a;
 }
 
 button {

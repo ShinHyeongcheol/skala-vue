@@ -1,8 +1,19 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { weatherList } from '@/data/weather'
+import { useWeatherStore } from '@/stores/weatherStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
 
-const selectedTime = ref('12:00')
+const weatherStore = useWeatherStore()
+const favoriteStore = useFavoriteStore()
+
+const displayTemperature = (celsius) => {
+  if (weatherStore.temperatureUnit === 'fahrenheit') {
+    return Math.round((celsius * 9) / 5 + 32)
+  }
+
+  return celsius
+}
 
 const timeOptions = [
   { value: '09:00', label: '오전 9시' },
@@ -14,7 +25,7 @@ const timeOptions = [
 
 const weatherAtSelectedTime = computed(() => {
   return weatherList.map((city) => {
-    const forecast = city.forecast.find((item) => item.time === selectedTime.value)
+    const forecast = city.forecast.find((item) => item.time === weatherStore.selectedTime)
 
     return {
       ...city,
@@ -50,9 +61,9 @@ const rainyCities = computed(() => {
           v-for="time in timeOptions"
           :key="time.value"
           type="button"
-          :class="{ active: selectedTime === time.value }"
-          :aria-pressed="selectedTime === time.value"
-          @click="selectedTime = time.value"
+          :class="{ active: weatherStore.selectedTime === time.value }"
+          :aria-pressed="weatherStore.selectedTime === time.value"
+          @click="weatherStore.setSelectedTime(time.value)"
         >
           {{ time.label }}
         </button>
@@ -60,15 +71,20 @@ const rainyCities = computed(() => {
     </section>
 
     <section class="summary-panel" aria-label="선택 시간 요약">
-      <p><strong>{{ selectedTime }}</strong> 기준 최고 기온은 <strong>{{ hottestCity.name }} {{ hottestCity.displayTemp }}°C</strong>입니다.</p>
+      <p><strong>{{ weatherStore.selectedTime }}</strong> 기준 최고 기온은 <strong>{{ hottestCity.name }} {{ displayTemperature(hottestCity.displayTemp) }}{{ weatherStore.temperatureSymbol }}</strong>입니다.</p>
       <p v-if="rainyCities.length > 0">☔ 비가 오는 지역: {{ rainyCities.map((city) => city.name).join(', ') }}</p>
       <p v-else>☀️ 비가 오는 지역이 없습니다.</p>
     </section>
 
     <section class="weather-grid" aria-label="도시별 시간대 날씨">
-      <article v-for="city in weatherAtSelectedTime" :key="city.id" class="weather-card">
-        <h3>{{ city.name }}</h3>
-        <p class="temperature">{{ city.displayTemp }}°C</p>
+      <article
+        v-for="city in weatherAtSelectedTime"
+        :key="city.id"
+        class="weather-card"
+        :class="{ favorite: favoriteStore.isFavorite(city.id) }"
+      >
+        <h3>{{ city.name }}<span v-if="favoriteStore.isFavorite(city.id)"> ⭐</span></h3>
+        <p class="temperature">{{ displayTemperature(city.displayTemp) }}{{ weatherStore.temperatureSymbol }}</p>
         <p>{{ city.displayStatus }}</p>
       </article>
     </section>
@@ -90,6 +106,7 @@ button.active { color: #fff; background: #2563eb; border-color: #2563eb; }
 .summary-panel { display: grid; gap: 0.375rem; }
 .weather-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
 .weather-card { display: grid; gap: 0.375rem; padding: 1rem; background: #fff; border: 1px solid #dbe2ea; border-radius: 0.5rem; }
+.weather-card.favorite { background: #fffbeb; border-color: #fbbf24; box-shadow: inset 0 0 0 1px #fbbf24; }
 .temperature { color: #2563eb; font-size: 1.5rem; font-weight: 800; }
 @media (max-width: 640px) { .weather-grid { grid-template-columns: 1fr; } button { width: 100%; } }
 </style>
