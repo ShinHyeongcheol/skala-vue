@@ -23,6 +23,7 @@ import prosEmitExample from '../components/practices/codeChallenge/propsAndEmit/
 import slotDefaultExample from '../components/practices/codeChallenge/componentSlot/DefaultSlotParent.vue'
 import slotNamedExample from '../components/practices/codeChallenge/componentSlot/NamedSlotParent.vue'
 import slotScopedExample from '../components/practices/codeChallenge/componentSlot/ScopedSlotParent.vue'
+import StoreCounter from '../components/practices/codeChallenge/pinia/StoreCounter.vue'
 
 const practices = [
   { id: 'sampleOne', category: 'Reactivity example', title: 'Sample One', component: SampleOne },
@@ -47,6 +48,7 @@ const practices = [
   { id: 'slotDefault', category: 'Component Slot example', title: 'Default Slot', component: slotDefaultExample },
   { id: 'slotNamed', category: 'Component Slot example', title: 'Named Slot', component: slotNamedExample },
   { id: 'slotScoped', category: 'Component Slot example', title: 'Scoped Slot', component: slotScopedExample },
+  { id: 'storeCounter', category: 'Pinia example', title: 'Store Counter', component: StoreCounter },
 ]
 
 const openCards = ref(Object.fromEntries(practices.map(({ id }) => [id, false])))
