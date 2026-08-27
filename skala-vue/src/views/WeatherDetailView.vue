@@ -62,15 +62,18 @@ onMounted(() => {
       <section class="forecast-section" aria-labelledby="forecast-title">
         <h2 id="forecast-title">시간대별 예보</h2>
         <div class="forecast-list">
-          <article
-            v-for="forecast in weatherStore.forecastByCityId[city.id] ?? city.forecast"
-            :key="forecast.time"
-            class="forecast-card"
-          >
-            <strong>{{ forecast.time }}</strong>
-            <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
-            <span>{{ forecast.status }}</span>
-          </article>
+          <template v-if="(weatherStore.forecastByCityId[city.id] ?? city.forecast)?.length">
+            <article
+              v-for="forecast in weatherStore.forecastByCityId[city.id] ?? city.forecast"
+              :key="forecast.time"
+              class="forecast-card"
+            >
+              <strong>{{ forecast.time }}</strong>
+              <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
+              <span>{{ forecast.status }}</span>
+            </article>
+          </template>
+          <p v-else class="forecast-empty">시간대별 예보 데이터가 없습니다.</p>
         </div>
       </section>
 
@@ -100,6 +103,7 @@ h2 { font-size: 1.125rem; }
 .temperature { color: #2563eb; font-size: 2rem; font-weight: 800; }
 .forecast-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; }
 .forecast-card { display: grid; gap: 0.25rem; padding: 0.75rem; background: #fff; border: 1px solid #dbe2ea; border-radius: 0.5rem; }
+.forecast-empty { grid-column: 1 / -1; padding: 1rem; color: #64748b; text-align: center; background: #fff; border: 1px dashed #94a3b8; border-radius: 0.5rem; }
 .favorite-button { justify-self: start; padding: 0.625rem 0.875rem; color: #92400e; font: inherit; font-size: 0.875rem; font-weight: 700; cursor: pointer; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 0.375rem; }
 .favorite-button:hover { background: #fde68a; }
 .back-link { justify-self: start; padding: 0.625rem 0.875rem; color: #fff; font-weight: 700; text-decoration: none; background: #2563eb; border-radius: 0.375rem; }

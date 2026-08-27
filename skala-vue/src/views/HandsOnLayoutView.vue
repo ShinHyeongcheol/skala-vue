@@ -4,6 +4,7 @@ import Button from 'primevue/button'
 import Message from 'primevue/message'
 import { weatherList } from '@/data/weather'
 import UnitToggler from '@/components/handsOn/weatherComponent/UnitToggler.vue'
+import MouseWaterEffects from '@/components/handsOn/weatherComponent/MouseWaterEffects.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
 
 const weatherStore = useWeatherStore()
@@ -16,6 +17,7 @@ const refreshWeather = () => {
 
 <template>
   <section class="hands-on-page">
+    <MouseWaterEffects />
     <header class="page-heading">
       <div class="heading-copy">
         <p class="eyebrow">Practice</p>
