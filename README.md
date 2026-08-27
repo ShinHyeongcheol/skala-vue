@@ -86,7 +86,7 @@ VITE_OPENWEATHER_API_KEY=발급받은_OpenWeatherMap_API_키
 - `npm install`로 의존성을 설치하고 `npm run dev`로 개발 서버를 실행해 로컬 화면 동작을 확인했습니다.
 - `src/main.js`에서 Vue 앱이 생성되고, `App.vue`, Router, View 컴포넌트로 화면이 연결되는 기본 구조를 확인했습니다.
 - 화면의 텍스트를 수정한 뒤 저장만으로 브라우저에 즉시 반영되는 HMR(Hot Module Replacement) 동작을 확인했습니다.
-- vue devTool을 사용해보면서 유용하다고 생각했던 기능으로는 그래프를 통해 각 뷰나 컴포넌트가 어떻게 연결이 되어있는지 확인해보고 움직여볼 수 있는 기능이었고, Components를 통해 트리 형태의 코드 구조나 실제 렌더리잉 된 코드를 확인해볼 수 있던 기능이 구조 파악에 도움이 되어 vue를 처음 학습할 때 도움이 되었습니다.
+- vue devTool을 사용해보면서 유용하다고 생각했던 기능으로는 그래프를 통해 각 뷰나 컴포넌트가 어떻게 연결이 되어있는지 확인해보고 움직여볼 수 있는 기능이었고, Components를 통해 트리 형태의 코드 구조나 실제 렌더링이 된 코드를 확인해볼 수 있던 기능이 구조 파악에 도움이 되어 vue를 처음 학습할 때 도움이 되었습니다.
 
 ### 1. Weather Mockup
 
@@ -275,7 +275,7 @@ const weatherList = ref([
 
 각 화면 사이를 이동해을 때 Pinia Store를 기반으로 추가한 도시와 예보 정보가 유지됩니다.
 
-### 7. 외부 UI 라이브러리 활용
+### 7. Weather UI Library
 
 | 라이브러리 | 사용 위치 | 활용 내용 |
 | --- | --- | --- |
@@ -286,7 +286,7 @@ const weatherList = ref([
 기본적인 vue의 ui 테마를 `primevue`를 이용해 테마를 적용을 시켰습니다.
 그 외에 다양한 라이브러리를 적용시켜보고 싶어 배경입자에 대한 파티클을 적용시키는 `tsParticles`와 마우스 이벤트에 따른 효과를 적용시켜보기 위해 `mouse-animations`을 적용시켰습니다.
 
-### 8. Weather Deployment 준비
+### 8. Weather Deployment
 
 Vercel 배포를 준비하며 ESLint 점검, Vite 빌드, 환경 변수 분리, SPA 라우팅 설정의 흐름을 확인했습니다. `vercel.json`에 rewrite 규칙을 추가해 `/hands-on/hourly`, `/weather/:cityId`처럼 Vue Router가 처리하는 주소를 직접 열거나 새로고침해도 `index.html`을 통해 앱이 다시 실행되도록 구성했습니다.
 
