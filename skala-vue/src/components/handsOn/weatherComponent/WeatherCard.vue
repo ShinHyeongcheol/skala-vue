@@ -72,15 +72,18 @@ const displayTemperature = (celsius) => {
     </div>
 
     <div v-show="isForecastOpen" class="forecast-list">
-      <p
-        v-for="forecast in city.forecast"
-        :key="forecast.time"
-        :class="{ selected: forecast.time === selectedTime }"
-      >
-        <strong>{{ forecast.time }}</strong>
-        <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
-        <span>{{ forecast.status }}</span>
-      </p>
+      <template v-if="city.forecast?.length">
+        <p
+          v-for="forecast in city.forecast"
+          :key="forecast.time"
+          :class="{ selected: forecast.time === selectedTime }"
+        >
+          <strong>{{ forecast.time }}</strong>
+          <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
+          <span>{{ forecast.status }}</span>
+        </p>
+      </template>
+      <p v-else class="forecast-empty">시간대별 예보 데이터가 없습니다.</p>
     </div>
   </article>
 </template>
@@ -201,6 +204,13 @@ button:hover {
   background: #dbeafe;
   border-color: #60a5fa;
   box-shadow: inset 0 0 0 1px #60a5fa;
+}
+
+.forecast-list .forecast-empty {
+  grid-column: 1 / -1;
+  display: block;
+  color: #64748b;
+  text-align: center;
 }
 
 @media (max-width: 480px) {

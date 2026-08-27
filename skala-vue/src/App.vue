@@ -1,4 +1,9 @@
+<script setup>
+import Toast from 'primevue/toast'
+</script>
+
 <template>
+  <Toast position="top-right" />
   <main class="app-shell">
     <header class="site-header">
       <RouterLink class="brand" to="/hands-on">Vue Practice</RouterLink>

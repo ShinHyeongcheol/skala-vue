@@ -1,9 +1,23 @@
 <script setup>
+import { computed } from 'vue'
+import Button from 'primevue/button'
+import Message from 'primevue/message'
+import { weatherList } from '@/data/weather'
 import UnitToggler from '@/components/handsOn/weatherComponent/UnitToggler.vue'
+import MouseWaterEffects from '@/components/handsOn/weatherComponent/MouseWaterEffects.vue'
+import { useWeatherStore } from '@/stores/weatherStore'
+
+const weatherStore = useWeatherStore()
+const allCities = computed(() => [...weatherList, ...weatherStore.additionalCities])
+
+const refreshWeather = () => {
+  weatherStore.refreshWeather(allCities.value)
+}
 </script>
 
 <template>
   <section class="hands-on-page">
+    <MouseWaterEffects />
     <header class="page-heading">
       <div class="heading-copy">
         <p class="eyebrow">Practice</p>
@@ -20,6 +34,21 @@ import UnitToggler from '@/components/handsOn/weatherComponent/UnitToggler.vue'
 
     <div class="unit-settings">
       <UnitToggler />
+      <Button
+        :label="weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading
+          ? '실시간 날씨와 예보를 불러오는 중...'
+          : '실시간 날씨·예보 갱신'"
+        :loading="weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading"
+        :disabled="weatherStore.isCurrentWeatherLoading || weatherStore.isForecastLoading"
+        @click="refreshWeather"
+      />
+      <p v-if="weatherStore.lastUpdated" class="api-status">마지막 갱신: {{ weatherStore.lastUpdated }}</p>
+      <Message v-if="weatherStore.currentWeatherErrorMessage" severity="error" :closable="false" class="api-error" aria-live="polite">
+        {{ weatherStore.currentWeatherErrorMessage }}
+      </Message>
+      <Message v-if="weatherStore.forecastErrorMessage" severity="error" :closable="false" class="api-error" aria-live="polite">
+        {{ weatherStore.forecastErrorMessage }}
+      </Message>
     </div>
 
     <RouterView />
@@ -35,6 +64,8 @@ h1 { color: var(--color-heading); font-size: clamp(2rem, 5vw, 3rem); font-weight
 .weather-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .weather-nav a { padding: 0.5rem 0.75rem; color: var(--color-text); font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 1px solid var(--color-border); border-radius: 0.375rem; }
 .weather-nav a.router-link-exact-active { color: #1d4ed8; background: #eff6ff; border-color: #93c5fd; }
-.unit-settings { justify-self: end; }
+.unit-settings { display: grid; justify-items: end; gap: 0.5rem; }
+.api-status { max-width: 17rem; color: var(--color-text); font-size: 0.75rem; text-align: right; }
+.api-error { max-width: 17rem; font-size: 0.75rem; text-align: left; }
 @media (max-width: 640px) { .page-heading { align-items: start; flex-direction: column; } }
 </style>

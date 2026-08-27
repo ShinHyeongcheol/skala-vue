@@ -26,25 +26,34 @@ const timeOptions = [
 
 const weatherAtSelectedTime = computed(() => {
   return cityList.value.map((city) => {
-    const forecasts = weatherStore.forecastByCityId[city.id] ?? city.forecast
+    const forecasts = weatherStore.forecastByCityId[city.id] ?? city.forecast ?? []
     const forecast = forecasts.find((item) => item.time === weatherStore.selectedTime)
 
     return {
       ...city,
-      displayTemp: forecast?.temp ?? city.temp,
-      displayStatus: forecast?.status ?? city.status,
+      hasForecast: Boolean(forecast),
+      displayTemp: forecast?.temp,
+      displayStatus: forecast?.status,
     }
   })
 })
 
 const hottestCity = computed(() => {
-  return weatherAtSelectedTime.value.reduce((hottest, city) => {
+  const citiesWithForecast = weatherAtSelectedTime.value.filter((city) => city.hasForecast)
+
+  if (citiesWithForecast.length === 0) {
+    return null
+  }
+
+  return citiesWithForecast.reduce((hottest, city) => {
     return city.displayTemp > hottest.displayTemp ? city : hottest
   })
 })
 
 const rainyCities = computed(() => {
-  return weatherAtSelectedTime.value.filter((city) => ['비', 'Rain', 'Drizzle', 'Thunderstorm'].includes(city.displayStatus))
+  return weatherAtSelectedTime.value.filter((city) => {
+    return city.hasForecast && ['비', 'Rain', 'Drizzle', 'Thunderstorm'].includes(city.displayStatus)
+  })
 })
 
 onMounted(() => {
@@ -83,9 +92,10 @@ onMounted(() => {
     </section>
 
     <section class="summary-panel" aria-label="선택 시간 요약">
-      <p><strong>{{ weatherStore.selectedTime }}</strong> 기준 최고 기온은 <strong>{{ hottestCity.name }} {{ displayTemperature(hottestCity.displayTemp) }}{{ weatherStore.temperatureSymbol }}</strong>입니다.</p>
+      <p v-if="hottestCity"><strong>{{ weatherStore.selectedTime }}</strong> 기준 최고 기온은 <strong>{{ hottestCity.name }} {{ displayTemperature(hottestCity.displayTemp) }}{{ weatherStore.temperatureSymbol }}</strong>입니다.</p>
+      <p v-else>선택한 시각의 예보 데이터가 아직 없습니다.</p>
       <p v-if="rainyCities.length > 0">☔ 비가 오는 지역: {{ rainyCities.map((city) => city.name).join(', ') }}</p>
-      <p v-else>☀️ 비가 오는 지역이 없습니다.</p>
+      <p v-else-if="hottestCity">☀️ 비가 오는 지역이 없습니다.</p>
     </section>
 
     <section class="weather-grid" aria-label="도시별 시간대 날씨">
@@ -96,8 +106,11 @@ onMounted(() => {
         :class="{ favorite: favoriteStore.isFavorite(city.id) }"
       >
         <h3>{{ city.name }}<span v-if="favoriteStore.isFavorite(city.id)"> ⭐</span></h3>
-        <p class="temperature">{{ displayTemperature(city.displayTemp) }}{{ weatherStore.temperatureSymbol }}</p>
-        <p>{{ city.displayStatus }}</p>
+        <template v-if="city.hasForecast">
+          <p class="temperature">{{ displayTemperature(city.displayTemp) }}{{ weatherStore.temperatureSymbol }}</p>
+          <p>{{ city.displayStatus }}</p>
+        </template>
+        <p v-else class="empty-forecast">선택한 시각의 예보 데이터가 없습니다.</p>
       </article>
     </section>
   </section>
@@ -122,5 +135,6 @@ button.active { color: #fff; background: #2563eb; border-color: #2563eb; }
 .weather-card { display: grid; gap: 0.375rem; padding: 1rem; background: #fff; border: 1px solid #dbe2ea; border-radius: 0.5rem; }
 .weather-card.favorite { background: #fffbeb; border-color: #fbbf24; box-shadow: inset 0 0 0 1px #fbbf24; }
 .temperature { color: #2563eb; font-size: 1.5rem; font-weight: 800; }
+.empty-forecast { color: #64748b; font-size: 0.875rem; }
 @media (max-width: 640px) { .weather-grid { grid-template-columns: 1fr; } button { width: 100%; } }
 </style>
