@@ -290,7 +290,7 @@ const weatherList = ref([
 
 Vercel 배포를 준비하며 ESLint 점검, Vite 빌드, 환경 변수 분리, SPA 라우팅 설정의 흐름을 확인했습니다. `vercel.json`에 rewrite 규칙을 추가해 `/hands-on/hourly`, `/weather/:cityId`처럼 Vue Router가 처리하는 주소를 직접 열거나 새로고침해도 `index.html`을 통해 앱이 다시 실행되도록 구성했습니다.
 
-- 배포 링크: 
+- 배포 링크: https://skala-vue-ashen.vercel.app/hands-on
 
 #### 배포 준비 과정에서 확인한 점
 
