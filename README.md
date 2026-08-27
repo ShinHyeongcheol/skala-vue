@@ -28,6 +28,9 @@ src/
 │   └── NotFoundView.vue             # 미매칭 경로 안내 화면
 ├── data/
 │   └── weather.js                   # 홈·상세 화면에서 공유하는 날씨 Mock Data
+├── stores/
+│   ├── weatherStore.js               # 온도 단위·선택 시간 전역 상태
+│   └── favoriteStore.js              # 즐겨찾는 도시 전역 상태
 └── components/
     ├── handsOn/
     │   └── weatherComponent/
@@ -94,7 +97,7 @@ Weather Mockup을 Composition API 방식으로 확장해, 여러 반응형 상�
 
 | 구현 항목 | 적용 내용 |
 | --- | --- |
-| 검색·선택 상태 | `searchQuery`, `selectedCityInfo`, `selectedWeatherStatus`, `selectedTime`을 `ref`로 관리했습니다. |
+| 검색·선택 상태 | `searchQuery`, `selectedCityInfo`, `selectedWeatherStatus`를 `ref`로 관리했습니다. 시간 선택 상태는 이후 `weatherStore.selectedTime`으로 전역 관리하도록 확장했습니다. |
 | 검색 결과 계산 | `computed(filteredWeatherList)`에서 도시명 검색어와 날씨 상태 필터를 함께 적용했습니다. 검색어가 없으면 전체 도시를 표시하고, 결과가 없으면 안내 문구를 출력합니다. |
 | 결과 요약 | `computed(visibleCityCount)`로 현재 필터 조건에 맞는 도시 수를 표시했습니다. |
 | 상태 감시 | `watch`로 선택 도시·날씨 상태 변경을 콘솔에 기록하고, `watchEffect`로 검색어 변화를 자동 추적했습니다. |
@@ -106,7 +109,7 @@ Weather Mockup에서 추가했던 시간대별 예보 데이터에 대한 기능
 상태가 변할 때 마다 콘솔로그에 나타나게 했고, 토글 목록에서도 내가 선택한 시간대를 좀 더 잘 확인할 수 있게 반영했습니다.
 
 - `computed(weatherAtSelectedTime)`: 각 도시의 `forecast` 배열에서 선택한 시각을 찾아 카드의 날씨/기온 표시값으로 변환합니다.
-- `watch(selectedTime)`: 시간 필터가 변경될 때 선택 시간을 콘솔에 기록합니다.
+- `watch(() => weatherStore.selectedTime)`: 시간 필터가 변경될 때 선택 시간을 콘솔에 기록합니다.
 
 ### 3. Weather Component 분리
 
@@ -175,7 +178,45 @@ city.value = weatherList.find(
 
 #### 추가 구현 - 시간대별 날씨 비교
 
-추가 구현내용이었던 시간대별 날씨를 따로 비교할 수 있는 화면을 구성했습니다. `WeatherHourlyView`에서는 `selectedTime`을 `ref`로 관리하고, `computed(weatherAtSelectedTime)`에서 각 도시의 `forecast` 배열을 선택 시간 기준의 표시값으로 변환했습니다. 변환된 목록으로 최고 기온 도시와 비가 오는 도시 목록도 `computed`로 출력하게 했습니다.
+추가 구현내용이었던 시간대별 날씨를 따로 비교할 수 있는 화면을 구성했습니다. `WeatherHourlyView`에서는 `weatherStore.selectedTime`을 사용하고, `computed(weatherAtSelectedTime)`에서 각 도시의 `forecast` 배열을 선택 시간 기준의 표시값으로 변환했습니다. 변환된 목록으로 최고 기온 도시와 비가 오는 도시 목록도 `computed`로 출력하게 했습니다.
+
+### 5. Weather Store
+
+Pinia Store를 활용해 여러 View에서 함께 사용해야 하는 날씨 설정과 사용자 선택 상태를 전역으로 관리했습니다. `main.js`에서 등록한 Pinia 인스턴스를 통해 각 컴포넌트가 Store를 직접 사용할 수 있도록 구성했습니다.
+
+#### 날씨 설정 Store
+
+`weatherStore.js`는 날씨 단위와 선택 시간을 관리합니다.
+
+| 구분 | 항목 | 적용 내용 |
+| --- | --- | --- |
+| state | `temperatureUnit` | 기본값을 `celsius`로 두고, 현재 온도 단위를 저장합니다. |
+| state | `selectedTime` | 기본값을 `12:00`으로 두고, 대시보드·시간대별 날씨 화면이 공유하는 선택 시간을 저장합니다. |
+| getter | `temperatureSymbol` | 현재 단위에 맞는 `°C` 또는 `°F` 기호를 반환합니다. |
+| action | `toggleTemperatureUnit()` | 섭씨와 화씨 상태를 전환합니다. |
+| action | `setSelectedTime(time)` | 시간 필터 버튼에서 선택한 시각으로 상태를 변경합니다. |
+
+`UnitToggler.vue`는 Hands-On 내부 메뉴 아래에 배치했습니다. 단위를 바꾸면 `WeatherCard`, `WeatherDetailView`, `WeatherHourlyView`가 같은 Store 상태를 참조해 동시에 섭씨 또는 화씨로 표시됩니다. 원본 Mock Data는 섭씨로 유지하고, 각 화면에서 화씨 변환식을 적용했습니다.
+
+```js
+Math.round((celsius * 9) / 5 + 32)
+```
+
+시간 필터도 Store로 옮겨 대시보드에서 선택한 시간이 시간대별 날씨 화면에 그대로 반영되도록 했습니다. 화면 간 이동 중에는 상태가 유지되며, 새로고침하면 기본값인 `12:00`으로 초기화됩니다.
+
+#### 추가 Store - 즐겨찾는 도시
+
+시간대별 날씨 확인 외에도 즐겨찾기를 통해 관심있는 도시를 선택할 수 있게 기획하여 구현했습니다.
+`favoriteStore.js`는 사용자가 선택한 즐겨찾기 도시 ID를 관리하고, 해당 도시는 `⭐`을 구분할 수 있도록 했습니다.
+
+| 구분 | 항목 | 적용 내용 |
+| --- | --- | --- |
+| state | `favoriteCityIds` | 즐겨찾기한 도시 ID를 배열로 저장합니다. |
+| getter | `favoriteCount` | 현재 즐겨찾기 도시 개수를 반환합니다. |
+| action | `toggleFavorite(cityId)` | 이미 선택한 도시는 제거하고, 선택하지 않은 도시는 추가합니다. |
+| helper | `isFavorite(cityId)` | 특정 도시의 즐겨찾기 여부를 확인합니다. |
+
+대시보드 카드에서는 상세보기 버튼 위에 즐겨찾기 버튼을 배치했고, 상세 화면에서도 즐겨찾기를 변경할 수 있게 했습니다. 시간대별 날씨 화면의 경우 즐겨찾기가 되어있을 경우 카드 배경과 테두리 색을 변경해 구분했습니다.
 
 ## Code Challenge
 
