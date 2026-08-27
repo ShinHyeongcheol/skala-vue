@@ -1,3 +1,7 @@
+<script setup>
+import UnitToggler from '@/components/handsOn/weatherComponent/UnitToggler.vue'
+</script>
+
 <template>
   <section class="hands-on-page">
     <header class="page-heading">
@@ -14,6 +18,10 @@
       </nav>
     </header>
 
+    <div class="unit-settings">
+      <UnitToggler />
+    </div>
+
     <RouterView />
   </section>
 </template>
@@ -27,5 +35,6 @@ h1 { color: var(--color-heading); font-size: clamp(2rem, 5vw, 3rem); font-weight
 .weather-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .weather-nav a { padding: 0.5rem 0.75rem; color: var(--color-text); font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 1px solid var(--color-border); border-radius: 0.375rem; }
 .weather-nav a.router-link-exact-active { color: #1d4ed8; background: #eff6ff; border-color: #93c5fd; }
+.unit-settings { justify-self: end; }
 @media (max-width: 640px) { .page-heading { align-items: start; flex-direction: column; } }
 </style>

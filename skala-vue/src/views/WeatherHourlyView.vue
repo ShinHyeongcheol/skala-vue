@@ -1,8 +1,18 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { weatherList } from '@/data/weather'
+import { useWeatherStore } from '@/stores/weatherStore'
 
 const selectedTime = ref('12:00')
+const weatherStore = useWeatherStore()
+
+const displayTemperature = (celsius) => {
+  if (weatherStore.temperatureUnit === 'fahrenheit') {
+    return Math.round((celsius * 9) / 5 + 32)
+  }
+
+  return celsius
+}
 
 const timeOptions = [
   { value: '09:00', label: '오전 9시' },
@@ -60,7 +70,7 @@ const rainyCities = computed(() => {
     </section>
 
     <section class="summary-panel" aria-label="선택 시간 요약">
-      <p><strong>{{ selectedTime }}</strong> 기준 최고 기온은 <strong>{{ hottestCity.name }} {{ hottestCity.displayTemp }}°C</strong>입니다.</p>
+      <p><strong>{{ selectedTime }}</strong> 기준 최고 기온은 <strong>{{ hottestCity.name }} {{ displayTemperature(hottestCity.displayTemp) }}{{ weatherStore.temperatureSymbol }}</strong>입니다.</p>
       <p v-if="rainyCities.length > 0">☔ 비가 오는 지역: {{ rainyCities.map((city) => city.name).join(', ') }}</p>
       <p v-else>☀️ 비가 오는 지역이 없습니다.</p>
     </section>
@@ -68,7 +78,7 @@ const rainyCities = computed(() => {
     <section class="weather-grid" aria-label="도시별 시간대 날씨">
       <article v-for="city in weatherAtSelectedTime" :key="city.id" class="weather-card">
         <h3>{{ city.name }}</h3>
-        <p class="temperature">{{ city.displayTemp }}°C</p>
+        <p class="temperature">{{ displayTemperature(city.displayTemp) }}{{ weatherStore.temperatureSymbol }}</p>
         <p>{{ city.displayStatus }}</p>
       </article>
     </section>

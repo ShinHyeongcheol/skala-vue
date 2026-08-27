@@ -2,9 +2,19 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { weatherList } from '@/data/weather'
+import { useWeatherStore } from '@/stores/weatherStore'
 
 const route = useRoute()
 const city = ref(null)
+const weatherStore = useWeatherStore()
+
+const displayTemperature = (celsius) => {
+  if (weatherStore.temperatureUnit === 'fahrenheit') {
+    return Math.round((celsius * 9) / 5 + 32)
+  }
+
+  return celsius
+}
 
 onMounted(() => {
   city.value = weatherList.find((item) => item.id === route.params.cityId) ?? null
@@ -23,7 +33,7 @@ onMounted(() => {
       <article class="current-weather">
         <h2>현재 날씨</h2>
         <p><strong>{{ city.status }}</strong></p>
-        <p class="temperature">{{ city.temp }}°C</p>
+        <p class="temperature">{{ displayTemperature(city.temp) }}{{ weatherStore.temperatureSymbol }}</p>
       </article>
 
       <section class="forecast-section" aria-labelledby="forecast-title">
@@ -31,7 +41,7 @@ onMounted(() => {
         <div class="forecast-list">
           <article v-for="forecast in city.forecast" :key="forecast.time" class="forecast-card">
             <strong>{{ forecast.time }}</strong>
-            <span>{{ forecast.temp }}°C</span>
+            <span>{{ displayTemperature(forecast.temp) }}{{ weatherStore.temperatureSymbol }}</span>
             <span>{{ forecast.status }}</span>
           </article>
         </div>
