@@ -175,7 +175,7 @@ city.value = weatherList.find(
 
 #### 추가 구현 - 시간대별 날씨 비교
 
-`WeatherHourlyView`에서는 `selectedTime`을 `ref`로 관리하고, `computed(weatherAtSelectedTime)`에서 각 도시의 `forecast` 배열을 선택 시간 기준의 표시값으로 변환했습니다. 변환된 목록으로 최고 기온 도시와 비가 오는 도시 목록도 `computed`로 요약했습니다.
+추가 구현내용이었던 시간대별 날씨를 따로 비교할 수 있는 화면을 구성했습니다. `WeatherHourlyView`에서는 `selectedTime`을 `ref`로 관리하고, `computed(weatherAtSelectedTime)`에서 각 도시의 `forecast` 배열을 선택 시간 기준의 표시값으로 변환했습니다. 변환된 목록으로 최고 기온 도시와 비가 오는 도시 목록도 `computed`로 출력하게 했습니다.
 
 ## Code Challenge
 
