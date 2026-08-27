@@ -1,0 +1,67 @@
+export const weatherList = [
+  {
+    id: 'city_01',
+    name: '서울',
+    temp: 28,
+    status: '맑음',
+    forecast: [
+      { time: '09:00', temp: 23, status: '맑음' },
+      { time: '12:00', temp: 28, status: '맑음' },
+      { time: '15:00', temp: 30, status: '구름' },
+      { time: '18:00', temp: 26, status: '맑음' },
+      { time: '21:00', temp: 21, status: '맑음' },
+    ],
+  },
+  {
+    id: 'city_02',
+    name: '수원',
+    temp: 24,
+    status: '비',
+    forecast: [
+      { time: '09:00', temp: 22, status: '흐림' },
+      { time: '12:00', temp: 24, status: '비' },
+      { time: '15:00', temp: 23, status: '흐림' },
+      { time: '18:00', temp: 21, status: '비' },
+      { time: '21:00', temp: 19, status: '비' },
+    ],
+  },
+  {
+    id: 'city_03',
+    name: '부산',
+    temp: 26,
+    status: '구름',
+    forecast: [
+      { time: '09:00', temp: 22, status: '구름' },
+      { time: '12:00', temp: 26, status: '구름' },
+      { time: '15:00', temp: 27, status: '맑음' },
+      { time: '18:00', temp: 24, status: '구름' },
+      { time: '21:00', temp: 20, status: '맑음' },
+    ],
+  },
+  {
+    id: 'city_04',
+    name: '판교',
+    temp: 27,
+    status: '맑음',
+    forecast: [
+      { time: '09:00', temp: 22, status: '맑음' },
+      { time: '12:00', temp: 27, status: '맑음' },
+      { time: '15:00', temp: 29, status: '맑음' },
+      { time: '18:00', temp: 25, status: '구름' },
+      { time: '21:00', temp: 20, status: '구름' },
+    ],
+  },
+  {
+    id: 'city_05',
+    name: '용인',
+    temp: 23,
+    status: '비',
+    forecast: [
+      { time: '09:00', temp: 21, status: '비' },
+      { time: '12:00', temp: 23, status: '비' },
+      { time: '15:00', temp: 22, status: '흐림' },
+      { time: '18:00', temp: 20, status: '비' },
+      { time: '21:00', temp: 18, status: '흐림' },
+    ],
+  },
+]

@@ -19,15 +19,21 @@ src/
 ├── router/
 │   └── index.js                    # 화면 경로 설정
 ├── views/
-│   ├── CodeChallengeView.vue       # Code Challenge 목록 화면
-│   └── HandsOnView.vue             # Hands-On 목록 화면
+│   ├── CodeChallengeView.vue        # Code Challenge 목록 화면
+│   ├── HandsOnLayoutView.vue        # Hands-On 공통 안내·하위 RouterView
+│   ├── WeatherHomeView.vue          # 날씨 대시보드 화면
+│   ├── WeatherHourlyView.vue        # 시간대별 날씨 비교 화면
+│   ├── WeatherDetailView.vue        # 도시 ID 기반 상세 날씨 화면
+│   ├── WeatherAboutView.vue         # 날씨 소개 화면
+│   └── NotFoundView.vue             # 미매칭 경로 안내 화면
+├── data/
+│   └── weather.js                   # 홈·상세 화면에서 공유하는 날씨 Mock Data
 └── components/
     ├── handsOn/
-    │   ├── WeatherHandsOn.vue      # 날씨 상태·필터·계산을 관리하는 부모 컴포넌트
     │   └── weatherComponent/
-    │       ├── BaseCard.vue        # 검색/목록 영역의 공통 카드 레이아웃
-    │       ├── SearchBar.vue       # 도시 검색 입력 컴포넌트
-    │       └── WeatherCard.vue     # 도시별 날씨 카드 컴포넌트
+    │       ├── BaseCard.vue         # 검색/목록 영역의 공통 카드 레이아웃
+    │       ├── SearchBar.vue        # 도시 검색 입력 컴포넌트
+    │       └── WeatherCard.vue      # 도시별 날씨 카드 컴포넌트
     └── practices/
         └── codeChallenge/          # 기능별 실습 컴포넌트
             ├── reactivity/
@@ -44,9 +50,9 @@ src/
 ### 화면 구성
 
 - `App.vue`는 공통 상단 메뉴와 `<RouterView />`만 담당합니다.
-- 기본 경로(`/`)는 채점 과제 화면인 `HandsOnView.vue`로 이동하며, 상단 메뉴에서 `Code Challenge` 화면으로 전환할 수 있습니다.
+- 기본 경로(`/`)는 `/hands-on`으로 이동합니다. 상단 메뉴는 `Hands-On`과 `Code Challenge` 화면으로 구성했습니다.
 - `CodeChallengeView.vue`는 실습 컴포넌트를 2열 카드 그리드로 표시합니다. 각 카드는 기본적으로 닫혀 있고, `열기/접기` 토글로 필요한 예제만 확인할 수 있습니다.
-- `HandsOnView.vue`는 과제 목록과 향후 구현할 Hands-On 결과물을 배치하는 화면입니다.
+- `HandsOnLayoutView.vue`는 Hands-On 안내와 내부 메뉴를 공통으로 표시하고, 하위 `<RouterView />`에 날씨 관련 화면을 렌더링합니다.
 
 
 ## Hands-On
@@ -104,18 +110,18 @@ Weather Mockup에서 추가했던 시간대별 예보 데이터에 대한 기능
 
 ### 3. Weather Component 분리
 
-기존 `WeatherHandsOn.vue`에 함께 있던 검색 입력, 공통 카드 레이아웃, 도시별 날씨 카드 UI를 역할별 컴포넌트로 분리했습니다. 부모 컴포넌트는 반응형 상태와 계산 로직을 유지하고, 자식 컴포넌트는 `props`로 데이터를 받아 화면에 표시하거나 `emit`으로 사용자 동작을 부모에 전달하도록 구성했습니다.
+기존 날씨 화면에 함께 있던 검색 입력, 공통 카드 레이아웃, 도시별 날씨 카드 UI를 역할별 컴포넌트로 분리했습니다. `WeatherHomeView.vue`는 반응형 상태와 계산 로직을 관리하고, 자식 컴포넌트는 `props`로 데이터를 받아 화면에 표시하거나 `emit`으로 사용자 동작을 부모에 전달하도록 구성했습니다.
 
 | 컴포넌트 | 역할 | 적용 내용 |
 | --- | --- | --- |
-| `WeatherHandsOn.vue` | 부모 컴포넌트 | `weatherList`, 검색어, 날씨/시간 필터, 선택 도시 상태를 관리합니다. `computed`로 필터링된 목록을 만들고, 자식 컴포넌트 이벤트를 처리합니다. |
+| `WeatherHomeView.vue` | 부모 View | `weatherList`, 검색어, 날씨/시간 필터, 선택 도시 상태를 관리합니다. `computed`로 필터링된 목록을 만들고, 자식 컴포넌트 이벤트를 처리합니다. |
 | `BaseCard.vue` | 공통 레이아웃 | `title` prop으로 카드 제목을 받고, 기본 `<slot />`으로 검색 영역 또는 날씨 목록을 감싸 공통 카드 스타일을 재사용합니다. |
 | `SearchBar.vue` | 검색 입력 | `searchQuery`를 props로 받아 표시하고, 입력 시 `update-query` 이벤트로 공백이 제거된 검색어를 부모에 전달합니다. |
 | `WeatherCard.vue` | 도시별 날씨 표시 | 도시 객체와 선택 시간을 props로 받아 카드·시간대별 예보를 렌더링합니다. 카드 선택, 상세보기, 예보 토글을 emit으로 부모에 전달합니다. |
 
 #### 컴포넌트 데이터 흐름
 
-`SearchBar`에서 검색어를 입력하면 `update-query` 이벤트가 `WeatherHandsOn`으로 전달됩니다. 부모는 `searchQuery`를 변경하고, `computed(filteredWeatherList)`가 다시 계산한 결과를 각 `WeatherCard`에 전달합니다. 반대로 도시 카드에서 발생한 선택·상세보기·예보 토글 이벤트도 부모가 받아 상태를 변경합니다.
+`SearchBar`에서 검색어를 입력하면 `update-query` 이벤트가 `WeatherHomeView`로 전달됩니다. 부모는 `searchQuery`를 변경하고, `computed(filteredWeatherList)`가 다시 계산한 결과를 각 `WeatherCard`에 전달합니다. 반대로 도시 카드에서 발생한 선택·상세보기·예보 토글 이벤트도 부모가 받아 상태를 변경합니다.
 
 ### 컴포넌트 분리 과정에서의 궁금증
 1. 자식과 부모 사이의 데이터가 props와 emit을 통해 오고 가는 것으로 이해했는데, 자식이 부모의 다른 자식의 데이터를 수정하려 한다면?(pdf 예시로는 Deep child가 Header의 데이터를 수정하려 한다면?)
@@ -126,6 +132,50 @@ Weather Mockup에서 추가했던 시간대별 예보 데이터에 대한 기능
 - 내 생각: 전체적인 흐름 자체는 비슷하지 않을까? 카드 등의 컴포넌트가 공통으로 사용이 되면 default 값을 줘서 빈 이벤트를 넣을 수 있지 않을까?
 - Vue에서도 Android와 비슷하게 공통 컴포넌트와 화면·기능별 컴포넌트를 분리한다. 여러 화면에서 사용하는 카드, 버튼, 모달 등은 공통 컴포넌트로 만들고, 날씨 카드처럼 특정 기능에만 필요한 컴포넌트는 해당 도메인 안에 둔다.
 - 공통 컴포넌트의 props에는 제목, 여백, 색상, 클릭 가능 여부처럼 범용적인 값만 두고 기본값을 설정한다. 화면별 데이터는 필요한 기능 컴포넌트에서 별도의 props로 전달한다. 이벤트는 공통 컴포넌트가 emit으로 발생시키고, 이를 사용하는 부모가 필요할 때만 수신한다. 부모가 이벤트를 받지 않아도 오류가 발생하지 않으므로, 빈 이벤트 함수를 기본값으로 둘 필요는 없다.
+
+### 4. Weather Router
+
+날씨 대시보드를 여러 화면으로 분리하고, Vue Router를 통해 상단 화면 전환·중첩 라우팅·동적 상세 페이지 이동을 구현했습니다.
+
+| 경로 | 화면 | 적용 내용 |
+| --- | --- | --- |
+| `/hands-on` | `WeatherHomeView.vue` | 도시 검색, 날씨·시간 필터, 도시별 카드 목록을 제공하는 기본 대시보드입니다. |
+| `/hands-on/hourly` | `WeatherHourlyView.vue` | 선택한 시각의 모든 도시 날씨를 비교하고 최고 기온·비 지역을 요약합니다. |
+| `/hands-on/about` | `WeatherAboutView.vue` | 날씨 대시보드의 기능을 소개하고 메인 화면으로 돌아가는 링크를 제공합니다. |
+| `/weather/:cityId` | `WeatherDetailView.vue` | URL의 도시 ID를 기준으로 해당 도시의 현재 날씨와 시간대별 예보를 표시합니다. |
+| 미매칭 경로 | `NotFoundView.vue` | Catch-all Route로 정의되지 않은 주소에 대한 안내를 표시합니다. |
+
+#### Router 구성
+
+`router/index.js`에서 View를 동적 import로 등록해 필요한 화면에 접근할 때만 로드되도록 했습니다. `/hands-on`은 `HandsOnLayoutView`를 부모로 두고, 하위 `<RouterView />`에 대시보드·시간대별 날씨·소개 화면을 표시하는 중첩 라우팅 구조입니다.
+
+```js
+{
+  path: '/hands-on',
+  component: HandsOnLayoutView,
+  children: [
+    { path: '', name: 'weather-home', component: WeatherHomeView },
+    { path: 'hourly', name: 'weather-hourly', component: WeatherHourlyView },
+    { path: 'about', name: 'weather-about', component: WeatherAboutView },
+  ],
+}
+```
+
+#### 동적 경로와 프로그래밍 방식 이동
+
+도시 카드의 상세보기 버튼은 도시 ID를 emit으로 전달합니다. `WeatherHomeView`는 `useRouter()`의 `router.push()`를 이용해 `/weather/:cityId` 경로로 이동하며, `WeatherDetailView`는 `useRoute()`와 `onMounted()`로 도시 ID에 해당하는 Mock Data를 선택합니다.
+
+```js
+router.push(`/weather/${cityId}`)
+
+city.value = weatherList.find(
+  (item) => item.id === route.params.cityId,
+) ?? null
+```
+
+#### 추가 구현 - 시간대별 날씨 비교
+
+`WeatherHourlyView`에서는 `selectedTime`을 `ref`로 관리하고, `computed(weatherAtSelectedTime)`에서 각 도시의 `forecast` 배열을 선택 시간 기준의 표시값으로 변환했습니다. 변환된 목록으로 최고 기온 도시와 비가 오는 도시 목록도 `computed`로 요약했습니다.
 
 ## Code Challenge
 

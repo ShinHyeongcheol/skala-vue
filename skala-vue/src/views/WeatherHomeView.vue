@@ -1,77 +1,13 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
-import BaseCard from './weatherComponent/BaseCard.vue'
-import SearchBar from './weatherComponent/SearchBar.vue'
-import WeatherCard from './weatherComponent/WeatherCard.vue'
+import { useRouter } from 'vue-router'
+import { weatherList as weatherData } from '@/data/weather'
+import BaseCard from '@/components/handsOn/weatherComponent/BaseCard.vue'
+import SearchBar from '@/components/handsOn/weatherComponent/SearchBar.vue'
+import WeatherCard from '@/components/handsOn/weatherComponent/WeatherCard.vue'
 
-const weatherList = ref([
-  {
-    id: 'city_01',
-    name: '서울',
-    temp: 28,
-    status: '맑음',
-    forecast: [
-      { time: '09:00', temp: 23, status: '맑음' },
-      { time: '12:00', temp: 28, status: '맑음' },
-      { time: '15:00', temp: 30, status: '구름' },
-      { time: '18:00', temp: 26, status: '맑음' },
-      { time: '21:00', temp: 21, status: '맑음' },
-    ],
-  },
-  {
-    id: 'city_02',
-    name: '수원',
-    temp: 24,
-    status: '비',
-    forecast: [
-      { time: '09:00', temp: 22, status: '흐림' },
-      { time: '12:00', temp: 24, status: '비' },
-      { time: '15:00', temp: 23, status: '흐림' },
-      { time: '18:00', temp: 21, status: '비' },
-      { time: '21:00', temp: 19, status: '비' },
-    ],
-  },
-  {
-    id: 'city_03',
-    name: '부산',
-    temp: 26,
-    status: '구름',
-    forecast: [
-      { time: '09:00', temp: 22, status: '구름' },
-      { time: '12:00', temp: 26, status: '구름' },
-      { time: '15:00', temp: 27, status: '맑음' },
-      { time: '18:00', temp: 24, status: '구름' },
-      { time: '21:00', temp: 20, status: '맑음' },
-    ],
-  },
-  {
-    id: 'city_04',
-    name: '판교',
-    temp: 27,
-    status: '맑음',
-    forecast: [
-      { time: '09:00', temp: 22, status: '맑음' },
-      { time: '12:00', temp: 27, status: '맑음' },
-      { time: '15:00', temp: 29, status: '맑음' },
-      { time: '18:00', temp: 25, status: '구름' },
-      { time: '21:00', temp: 20, status: '구름' },
-    ],
-  },
-  {
-    id: 'city_05',
-    name: '용인',
-    temp: 23,
-    status: '비',
-    forecast: [
-      { time: '09:00', temp: 21, status: '비' },
-      { time: '12:00', temp: 23, status: '비' },
-      { time: '15:00', temp: 22, status: '흐림' },
-      { time: '18:00', temp: 20, status: '비' },
-      { time: '21:00', temp: 18, status: '흐림' },
-    ],
-  },
-])
-
+const weatherList = ref(weatherData)
+const router = useRouter()
 const searchQuery = ref('')
 const selectedCityInfo = ref(null)
 const openForecastCityId = ref(null)
@@ -132,9 +68,8 @@ const selectCity = (city) => {
   selectedCityInfo.value = city
 }
 
-const showDetail = (cityName, status) => {
-  const selectedHour = Number(selectedTime.value.split(':')[0])
-  window.alert(`${cityName}의 ${selectedHour}시 날씨는 [${status}] 상태입니다.`)
+const showDetail = (cityId) => {
+  router.push(`/weather/${cityId}`)
 }
 
 const toggleForecast = (cityId) => {
@@ -144,7 +79,7 @@ const toggleForecast = (cityId) => {
 
 <template>
   <section class="weather" aria-labelledby="weather-title">
-    <h2 id="weather-title">🌤️ 과제 2: 날씨 (컴포지션)</h2>
+    <h2 id="weather-title">🌤️ 날씨 대시보드</h2>
 
     <BaseCard title="🔍 도시 검색">
       <SearchBar
@@ -182,7 +117,6 @@ const toggleForecast = (cityId) => {
     </BaseCard>
 
     <BaseCard title="🏙️ 지역별 날씨 현황">
-
       <template v-if="filteredWeatherList.length > 0">
         <WeatherCard
           v-for="city in filteredWeatherList"
@@ -215,15 +149,17 @@ const toggleForecast = (cityId) => {
 }
 
 h2 {
-  padding-bottom: 0.75rem;
-  font-size: 1.25rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-label {
+  color: var(--color-heading);
   font-weight: 700;
 }
 
+h2 {
+  padding-bottom: 0.75rem;
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+label,
 .filter-label {
   font-weight: 700;
 }
@@ -233,22 +169,6 @@ label {
   margin: 0.25rem 0;
   border: 0;
   border-top: 1px solid #dbe2ea;
-}
-
-.time-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.time-button {
-  min-width: 5.5rem;
-}
-
-.time-button.active {
-  color: #fff;
-  background: #2563eb;
-  border-color: #2563eb;
 }
 
 select {
@@ -261,13 +181,13 @@ select {
   border-radius: 0.25rem;
 }
 
-.weather > p,
-.time-filter + p {
-  font-size: 0.875rem;
+.time-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 button {
-  flex: 0 0 auto;
   padding: 0.5rem 0.75rem;
   color: #1e293b;
   font: inherit;
@@ -280,6 +200,20 @@ button {
 
 button:hover {
   background: #f1f5f9;
+}
+
+.time-button {
+  min-width: 5.5rem;
+}
+
+.time-button.active {
+  color: #fff;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.time-filter + p {
+  font-size: 0.875rem;
 }
 
 .status-bar {
