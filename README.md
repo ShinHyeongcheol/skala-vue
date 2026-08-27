@@ -286,6 +286,20 @@ const weatherList = ref([
 기본적인 vue의 ui 테마를 `primevue`를 이용해 테마를 적용을 시켰습니다.
 그 외에 다양한 라이브러리를 적용시켜보고 싶어 배경입자에 대한 파티클을 적용시키는 `tsParticles`와 마우스 이벤트에 따른 효과를 적용시켜보기 위해 `mouse-animations`을 적용시켰습니다.
 
+### 8. Weather Deployment 준비
+
+Vercel 배포를 준비하며 ESLint 점검, Vite 빌드, 환경 변수 분리, SPA 라우팅 설정의 흐름을 확인했습니다. `vercel.json`에 rewrite 규칙을 추가해 `/hands-on/hourly`, `/weather/:cityId`처럼 Vue Router가 처리하는 주소를 직접 열거나 새로고침해도 `index.html`을 통해 앱이 다시 실행되도록 구성했습니다.
+
+- 배포 링크: 
+
+#### 배포 준비 과정에서 확인한 점
+
+- 개발 서버에서는 자연스럽게 동작하던 Router 주소도 정적 호스팅 환경에서는 별도의 SPA fallback 설정이 필요합니다.
+- `npm run lint`와 `npm run build`를 배포 전에 실행하면 문법 오류와 빌드 오류를 서버에 올리기 전에 확인할 수 있습니다.
+- `.env`를 Git에서 제외하고 `.env.example`만 공유하면 API 설정 방식은 안내하면서 실제 키는 저장소에 노출하지 않을 수 있습니다.
+- Vite의 `VITE_` 변수는 최종 브라우저 번들에 포함되므로, Git 제외와 별개로 민감한 비밀값은 백엔드나 서버리스 함수에서 관리해야 합니다.
+- Vercel은 GitHub 저장소의 커밋을 기준으로 빌드와 배포를 자동화하므로, Preview 배포로 확인한 뒤 Production 배포로 이어지는 흐름을 경험할 수 있습니다.
+
 ## Code Challenge
 
 Vue의 개별 기능을 작은 컴포넌트로 나누어 작성했습니다. 각 카드는 기본적으로 닫혀 있으며, 필요한 실습을 열어 동작을 확인할 수 있습니다.
